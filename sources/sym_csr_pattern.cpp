@@ -25,10 +25,10 @@ void SymCSRPattern::make_sparse_format(const DoFHandler &dof_handler)
   std::set<unsigned int> *connect = new std::set<unsigned int>[_order];
 
   // pass through all triangles and all dofs on them
-  expect(dof_handler.fmesh()->n_triangles() != 0, "");
-  for (int cell = 0; cell < dof_handler.fmesh()->n_triangles(); ++cell)
+  expect(dof_handler.fmesh().n_triangles() != 0, "");
+  for (int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
   {
-    Triangle triangle = dof_handler.fmesh()->triangle(cell);
+    Triangle triangle = dof_handler.fmesh().triangle(cell);
 
     expect(triangle.n_dofs() != 0, "");
     for (int di = 0; di < triangle.n_dofs(); ++di)

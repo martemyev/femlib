@@ -218,9 +218,9 @@ const std::vector<Point>& DoFHandler::dofs() const
 
 
 
-const FineMesh* DoFHandler::fmesh() const
+const FineMesh& DoFHandler::fmesh() const
 {
-  return _fmesh;
+  return *(_fmesh);
 }
 
 

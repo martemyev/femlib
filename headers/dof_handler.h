@@ -59,14 +59,14 @@ public:
   Point dof(unsigned int number) const;
 
             /**
-             * Get a constant reference for the whole list of dofs
+             * Get a reference to a constant vector (which in this case can't be changed) for an access to the whole list of dofs
              */
   const std::vector<Point>& dofs() const;
 
             /**
-             * Const pointer to the fine mesh for access to mesh's functions
+             * Get a reference to the constant fine mesh object (which in this case can't be changed) for access to mesh's functions
              */
-  const FineMesh* fmesh() const;
+  const FineMesh& fmesh() const;
 
             /**
              * Get the number of dof associated with mesh vertex

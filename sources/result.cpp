@@ -35,11 +35,11 @@ void Result::write_vtu(const std::string &filename,
   std::ofstream out(filename.c_str()); // open the file for writing
   require(out, "File " + filename + " cannot be opened");
 
-  const std::vector<Point> dofs = _dof_handler->dofs(); // the list of all degrees of freedom
+  const std::vector<Point> &dofs = _dof_handler->dofs(); // the list of all degrees of freedom
   require(!dofs.empty(), "The vector of degrees of freedom is empty");
 
-  const FineMesh *fmesh = _dof_handler->fmesh(); // the fine triangular mesh
-  require(fmesh != 0, "Fine mesh is not initialized for this dof handler");
+  const FineMesh &fmesh = _dof_handler->fmesh(); // the fine triangular mesh
+  //require(fmesh != 0, "Fine mesh is not initialized for this dof handler");
 
   // extract the data from PETSc vectors
   std::vector<int> idx(dofs.size());
@@ -57,7 +57,7 @@ void Result::write_vtu(const std::string &filename,
   out << "<?xml version=\"1.0\"?>\n";
   out << "<VTKFile type=\"UnstructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">\n";
   out << "  <UnstructuredGrid>\n";
-  out << "    <Piece NumberOfPoints=\"" << dofs.size() << "\" NumberOfCells=\"" << fmesh->n_triangles() << "\">\n";
+  out << "    <Piece NumberOfPoints=\"" << dofs.size() << "\" NumberOfCells=\"" << fmesh.n_triangles() << "\">\n";
   out << "      <PointData>\n";
   out << "        <DataArray type=\"Float64\" Name=\"solution\" format=\"ascii\">\n";
   for (int i = 0; i < dofs.size(); ++i)
@@ -83,21 +83,21 @@ void Result::write_vtu(const std::string &filename,
   out << "      </Points>\n";
   out << "      <Cells>\n";
   out << "        <DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n";
-  for (int tr = 0; tr < fmesh->n_triangles(); ++tr)
+  for (int tr = 0; tr < fmesh.n_triangles(); ++tr)
   {
-    const Triangle triangle = fmesh->triangle(tr);
+    const Triangle triangle = fmesh.triangle(tr);
     for (int d = 0; d < Triangle::n_dofs_first; ++d)
       out << triangle.dof(d) << " ";
     out << "\n";
   }
   out << "        </DataArray>\n";
   out << "        <DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n";
-  for (int tr = 0; tr < fmesh->n_triangles(); ++tr)
+  for (int tr = 0; tr < fmesh.n_triangles(); ++tr)
     out << (tr + 1) * Triangle::n_dofs_first << " ";
   out << "\n";
   out << "        </DataArray>\n";
   out << "        <DataArray type=\"Int32\" Name=\"types\" format=\"ascii\">\n";
-  for (int tr = 0; tr < fmesh->n_triangles(); ++tr)
+  for (int tr = 0; tr < fmesh.n_triangles(); ++tr)
     out << Triangle::vtk_el_type << " ";
   out << "\n";
   out << "        </DataArray>\n";
