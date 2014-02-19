@@ -321,10 +321,26 @@ unsigned int FineMesh::n_vertices() const
 
 
 
+void FineMesh::n_vertices(unsigned int amount)
+{
+  expect(_vertices.empty(), "The list of vertices is not empty. What are you doing?");
+  _vertices.resize(amount); // allocate the memory for the vector
+}
+
+
+
 Point FineMesh::vertex(unsigned int number) const
 {
   expect(number >= 0 && number < _vertices.size(), "Incorrect input parameter");
   return _vertices[number];
+}
+
+
+
+void FineMesh::vertex(unsigned int number, const Point &ver)
+{
+  expect(number < _vertices.size(), "Incorrect input parameter");
+  _vertices[number] = ver;
 }
 
 
@@ -343,12 +359,30 @@ unsigned int FineMesh::n_triangles() const
 
 
 
+void FineMesh::n_triangles(unsigned int amount)
+{
+  expect(_triangles.empty(), "The list of triangles is not empty. What are you doing?");
+  _triangles.resize(amount); // allocate the memory for the vector
+}
+
+
+
 Triangle FineMesh::triangle(int number) const
 {
   expect(number >= 0 && number < _triangles.size(),
          "Incorrect number of a triangle (" + d2s(number) +
          "). It should be in a range [0, " + d2s(_triangles.size()) + ")");
   return _triangles[number];
+}
+
+
+
+void FineMesh::triangle(unsigned int number, const Triangle &tri)
+{
+  expect(number < _triangles.size(),
+         "Incorrect number of a triangle (" + d2s(number) +
+         "). It should be in a range [0, " + d2s(_triangles.size()) + ")");
+  _triangles[number] = tri;
 }
 
 
@@ -390,7 +424,7 @@ Line FineMesh::line(unsigned int number) const
 
 
 
-std::vector<unsigned int> const& FineMesh::boundary_vertices() const
+std::vector<int> const& FineMesh::boundary_vertices() const
 {
   return _boundary_vertices;
 }
@@ -401,3 +435,35 @@ unsigned int FineMesh::n_partitions() const
 {
   return _partitions.size();
 }
+
+
+
+bool FineMesh::empty() const
+{
+  return (_vertices.empty() && _triangles.empty());
+}
+
+
+
+unsigned int FineMesh::n_boundary_vertices() const
+{
+  return _boundary_vertices.size();
+}
+
+
+
+int FineMesh::boundary_vertex(unsigned int num) const
+{
+  expect(num < _boundary_vertices.size(), "Incorrect input parameter");
+  return _boundary_vertices[num];
+}
+
+
+
+void FineMesh::boundary_vertices(const std::set<int> b_nodes)
+{
+  expect(_boundary_vertices.empty(), "The list of boundary vertices is not empty. WTF?");
+  _boundary_vertices.resize(b_nodes.size()); // allocate the memory
+  std::copy(b_nodes.begin(), b_nodes.end(), _boundary_vertices.begin()); // copy the values
+}
+

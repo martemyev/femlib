@@ -36,7 +36,10 @@ void Result::write_vtu(const std::string &filename,
   require(out, "File " + filename + " cannot be opened");
 
   const std::vector<Point> dofs = _dof_handler->dofs(); // the list of all degrees of freedom
+  require(!dofs.empty(), "The vector of degrees of freedom is empty");
+
   const FineMesh *fmesh = _dof_handler->fmesh(); // the fine triangular mesh
+  require(fmesh != 0, "Fine mesh is not initialized for this dof handler");
 
   // extract the data from PETSc vectors
   std::vector<int> idx(dofs.size());

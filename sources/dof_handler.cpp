@@ -8,7 +8,9 @@
 DoFHandler::DoFHandler(FineMesh *fmesh)
   : _fmesh(fmesh),
     _vertices_dofs(0)
-{ }
+{
+  require(!_fmesh->empty(), "The fine mesh is empty");
+}
 
 
 

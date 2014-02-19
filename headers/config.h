@@ -4,8 +4,8 @@
 #include <string>
 
 #define DEBUG
-#define HAVE_64BIT_SIZE_T
+/* #undef HAVE_64BIT_SIZE_T */
 
-const std::string HOME_DIRECTORY = "/u/artemyev";
+const std::string HOME_DIRECTORY = "/home/artemiev";
 
 #endif // FEM_CONFIG_H

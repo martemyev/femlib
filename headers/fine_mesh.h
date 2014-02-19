@@ -34,12 +34,14 @@ public:
              * Get the number of mesh vertices
              */
   unsigned int n_vertices() const;
+  void n_vertices(unsigned int amount);
 
             /**
              * Get the mesh vertex (its copy)
              * @param number - the serial number of the mesh vertex
              */
   Point vertex(unsigned int number) const;
+  void vertex(unsigned int number, const Point &ver);
 
             /**
              * Get a constant reference to all mesh vertices
@@ -50,12 +52,14 @@ public:
              * Get the number of mesh triangles
              */
   unsigned int n_triangles() const;
+  void n_triangles(unsigned int amount);
 
             /**
              * Get the mesh triangle (its copy)
              * @param number - the serial number of the mesh triangle
              */
   Triangle triangle(int number) const;
+  void triangle(unsigned int number, const Triangle &tri);
 
             /**
              * Get the mesh triangle - not a copy - pointer to original one
@@ -87,9 +91,31 @@ public:
             /**
              * Get the list of the boundary vertices of the mesh
              */
-  std::vector<unsigned int> const& boundary_vertices() const;
+  const std::vector<int>& boundary_vertices() const;
 
+            /**
+             * Get the number of partitions of the mesh.
+             * The partitions are associated (are considered) as coarse elements.
+             */
   unsigned int n_partitions() const;
+
+            /**
+             * Check if the mesh has no vitally important elements (like nodes, triangles, etc)
+             */
+  bool empty() const;
+
+            /**
+             * Get the number of boundary vertices
+             */
+  unsigned int n_boundary_vertices() const;
+
+            /**
+             * Get a boundary vertex (i.e. the number of ordinary vertex which is boundary)
+             * @param num - serial number of boundary vertex in the list
+             */
+  int boundary_vertex(unsigned int num) const;
+
+  void boundary_vertices(const std::set<int> b_nodes);
 
 
 private: // ========================== PRIVATE =========================
@@ -135,7 +161,7 @@ private: // ========================== PRIVATE =========================
             /**
              * The numbers of the mesh vertices that are on the boundary of the computational domain
              */
-  std::vector<unsigned int> _boundary_vertices;
+  std::vector<int> _boundary_vertices;
 
             /**
              * The unique numbers of partitions of the mesh
