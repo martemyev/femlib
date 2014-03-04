@@ -62,15 +62,29 @@ void DoFHandler::distribute_cg_first(const Parameters &param)
   for (int ver = 0; ver < _fmesh->n_vertices(); ++ver)
     _dofs[ver] = _fmesh->vertex(ver);
 
-  for (int tr = 0; tr < _fmesh->n_triangles(); ++tr)
+  // trying to work with triangles first
+  for (int cell = 0; cell < _fmesh->n_triangles(); ++cell)
   {
-    Triangle *triangle = _fmesh->triangle_orig(tr);
+    Triangle *triangle = _fmesh->triangle_orig(cell);
     triangle->n_dofs(Triangle::n_dofs_first); // allocate the memory for degrees of freedom
     for (int ver = 0; ver < Triangle::n_vertices; ++ver)
     {
       // set the numbers of degrees of freedom.
       // the number of the degree of freedom is the same as the number of the corresponding vertex
       triangle->dof(ver, triangle->vertex(ver));
+    }
+  }
+
+  // then trying to work with rectangles
+  for (int cell = 0; cell < _fmesh->n_rectangles(); ++cell)
+  {
+    Rectangle *rectangle = _fmesh->rectangle_orig(cell);
+    rectangle->n_dofs(Rectangle::n_dofs_first); // allocate the memory for degrees of freedom
+    for (int ver = 0; ver < Rectangle::n_vertices; ++ver)
+    {
+      // set the numbers of degrees of freedom.
+      // the number of the degree of freedom is the same as the number of the corresponding vertex
+      rectangle->dof(ver, rectangle->vertex(ver));
     }
   }
 }

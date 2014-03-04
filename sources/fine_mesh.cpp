@@ -440,7 +440,7 @@ unsigned int FineMesh::n_partitions() const
 
 bool FineMesh::empty() const
 {
-  return (_vertices.empty() && _triangles.empty());
+  return (_vertices.empty() && (_triangles.empty() || _rectangles.empty()));
 }
 
 
@@ -467,3 +467,78 @@ void FineMesh::boundary_vertices(const std::set<int> b_nodes)
   std::copy(b_nodes.begin(), b_nodes.end(), _boundary_vertices.begin()); // copy the values
 }
 
+
+
+const std::vector<Rectangle>& FineMesh::rectangles() const
+{
+  return _rectangles;
+}
+
+
+
+unsigned int FineMesh::n_rectangles() const
+{
+  return _rectangles.size();
+}
+
+
+
+Rectangle* FineMesh::rectangle_orig(unsigned int number)
+{
+  expect(number < _rectangles.size(), "Incorrect input parameter");
+  return &_rectangles[number];
+}
+
+
+
+void FineMesh::create_rectangular_grid()
+{
+  const double hx = (_param->X_END - _param->X_BEG) / (double)_param->N_FINE_X; // step in x-direction
+  const double hy = (_param->Y_END - _param->Y_BEG) / (double)_param->N_FINE_Y; // step in y-direction
+
+  const unsigned int n_vertices = (_param->N_FINE_X + 1) * (_param->N_FINE_Y + 1); // the total number of vertices
+  _vertices.resize(n_vertices); // allocate the memory for all vertices
+
+  const unsigned int n_rectangles = _param->N_FINE_X * _param->N_FINE_Y; // the total number of rectangles
+  _rectangles.resize(n_rectangles); // allocate the memory for all rectangles
+
+  unsigned int ver = 0; // number of a current vertex
+  for (int i = 0; i < _param->N_FINE_Y + 1; ++i)
+  {
+    const double y = (i == _param->N_FINE_Y ? _param->Y_END : _param->Y_BEG + i * hy);
+    for (int j = 0; j < _param->N_FINE_X + 1; ++j)
+    {
+      const double x = (j == _param->N_FINE_X ? _param->X_END : _param->X_BEG + j * hx);
+      _vertices[ver] = Point(x, y, 0);
+      ++ver;
+    }
+  }
+
+  unsigned int rect = 0; // number of a current rectangle
+  std::vector<unsigned int> vert(Rectangle::n_vertices); // the numbers of vertices describing a rectangle
+  for (int i = 0; i < _param->N_FINE_Y; ++i)
+  {
+    for (int j = 0; j < _param->N_FINE_X; ++j)
+    {
+      // numeration of rectangle's vertices is the following
+      // 2 --- 3
+      // |     |
+      // |     |
+      // 0 --- 1
+      vert[0] = i * (_param->N_FINE_X + 1) + j;
+      vert[1] = i * (_param->N_FINE_X + 1) + j + 1;
+      vert[2] = (i + 1) * (_param->N_FINE_X + 1) + j;
+      vert[3] = (i + 1) * (_param->N_FINE_X + 1) + j + 1;
+      _rectangles[rect] = Rectangle(vert, _vertices);
+      ++rect;
+    }
+  }
+}
+
+
+
+Rectangle FineMesh::rectangle(unsigned int number) const
+{
+  expect(number < _rectangles.size(), "");
+  return _rectangles[number];
+}

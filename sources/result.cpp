@@ -1,5 +1,6 @@
 #include "result.h"
 #include "auxiliary_functions.h"
+#include "parameters.h"
 #include "dof_handler.h"
 #include "fine_mesh.h"
 #include "point.h"
@@ -8,8 +9,9 @@
 
 
 
-Result::Result(const DoFHandler *dof_handler)
-  : _dof_handler(dof_handler)
+Result::Result(const Parameters *param, const DoFHandler *dof_handler)
+  : _param(param),
+    _dof_handler(dof_handler)
 { }
 
 
@@ -108,3 +110,75 @@ void Result::write_vtu(const std::string &filename,
 
   out.close();
 }
+
+
+
+void Result::write_vts(const std::string &filename,
+                       const Vec &solution,
+                       const Vec &exact_solution) const
+{
+  using namespace boost::filesystem;
+  expect(extension(filename) == ".vts",
+         "The extension of the file ('" + extension(filename) +
+         "') is not suitable for this function, because it should be '.vts'.");
+
+//  expect(_dof_handler->n_dofs() == _dof_handler->fmesh()->n_vertices(),
+//         "This function should be rewritten for the case higher order basis functions"
+//         "(when the number of degrees of freedom is not equal to the number of the mesh vertices)");
+
+  std::ofstream out(filename.c_str()); // open the file for writing
+  require(out, "File " + filename + " cannot be opened");
+
+  const std::vector<Point> &dofs = _dof_handler->dofs(); // the list of all degrees of freedom
+  require(!dofs.empty(), "The vector of degrees of freedom is empty");
+
+  const FineMesh &fmesh = _dof_handler->fmesh(); // the fine triangular mesh
+  //require(fmesh != 0, "Fine mesh is not initialized for this dof handler");
+
+  // extract the data from PETSc vectors
+  std::vector<int> idx(dofs.size());
+  std::iota(idx.begin(), idx.end(), 0); // idx = { 0, 1, 2, 3, .... }
+  std::vector<double> solution_values(dofs.size());
+  VecGetValues(solution, dofs.size(), &idx[0], &solution_values[0]); // extract the values of the numerical solution
+
+  std::vector<double> exact_solution_values;
+  if (exact_solution)
+  {
+    exact_solution_values.resize(dofs.size());
+    VecGetValues(exact_solution, dofs.size(), &idx[0], &exact_solution_values[0]); // extract the values of the exact solution
+  }
+
+  out << "<?xml version=\"1.0\"?>\n";
+  out << "<VTKFile type=\"StructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">\n";
+  out << "  <StructuredGrid WholeExtent=\"1 " << _param->N_FINE_X << " 1 " << _param->N_FINE_Y << " 1 1\">\n";
+  out << "    <Piece Extent=\"1 " << _param->N_FINE_X << " 1 " << _param->N_FINE_Y << " 1 1\">\n";
+  out << "      <PointData Scalars=\"scalars\">\n";
+  out << "        <DataArray type=\"Float64\" Name=\"U_solution\" format=\"ascii\">\n";
+  for (int i = 0; i < dofs.size(); ++i)
+    out << solution_values[i] << "\n";
+  out << "        </DataArray>\n";
+  if (exact_solution)
+  {
+    out << "        <DataArray type=\"Float64\" Name=\"U_exact\" format=\"ascii\">\n";
+    for (int i = 0; i < dofs.size(); ++i)
+      out << exact_solution_values[i] << "\n";
+    out << "        </DataArray>\n";
+  }
+  out << "      </PointData>\n";
+  out << "      <Points>\n";
+  out << "        <DataArray type=\"Float64\" NumberOfComponents=\"3\" format=\"ascii\">\n";
+  for (int i = 0; i < fmesh.n_vertices(); ++i)
+  {
+    const Point vert = fmesh.vertex(i);
+    out << vert.coord(0) << " " << vert.coord(1) << " " << vert.coord(2) << " ";
+  }
+  out << "\n";
+  out << "        </DataArray>\n";
+  out << "      </Points>\n";
+  out << "    </Piece>\n";
+  out << "  </StructuredGrid>\n";
+  out << "</VTKFile>\n";
+
+  out.close();
+}
+

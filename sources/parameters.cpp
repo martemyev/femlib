@@ -35,6 +35,7 @@ void Parameters::default_parameters()
   TIME_SCHEME = EXPLICIT;
   X_BEG = Y_BEG = 0.;
   X_END = Y_END = 1.;
+  N_FINE_X = N_FINE_Y = 1;
   //CL = 0.1;
   TIME_BEG = 0.;
   TIME_END = 1.;
@@ -98,6 +99,8 @@ void Parameters::read_from_command_line(int argc, char **argv)
     ("sol_step", po::value<unsigned int>(), std::string("if we need to save .dat files then how often. every (sol_step)-th file will be saved (" + d2s(SOL_STEP) + ")").c_str())
     ("x1",       po::value<double>(),       std::string("X_END (" + d2s(X_END) + ")").c_str())
     ("y1",       po::value<double>(),       std::string("Y_END (" + d2s(Y_END) + ")").c_str())
+    ("nfx",      po::value<unsigned int>(), std::string("number of fine rectangular elements in x-direction (" + d2s(N_FINE_X) + ")").c_str())
+    ("nfy",      po::value<unsigned int>(), std::string("number of fine rectangular elements in y-direction (" + d2s(N_FINE_Y) + ")").c_str())
     ("gamma",    po::value<double>(),       std::string("parameter of the IPDG method (" + d2s(IPDG_GAMMA) + ")").c_str())
     ("f0",       po::value<double>(),       std::string("source frequency (" + d2s(SOURCE_FREQUENCY) + ")").c_str())
     ("p",        po::value<double>(),       std::string("source parameter (" + d2s(SOURCE_SUPPORT) + ")").c_str())
@@ -170,15 +173,26 @@ void Parameters::read_from_command_line(int argc, char **argv)
   if (vm.count("inf"))
     PRINT_INFO = vm["inf"].as<bool>();
   if (vm.count("vtu_step"))
+  {
     VTU_STEP = vm["vtu_step"].as<unsigned int>();
+    PRINT_VTU = true;
+  }
   if (vm.count("sol_step"))
+  {
     SOL_STEP = vm["sol_step"].as<unsigned int>();
+    SAVE_SOL = true;
+  }
 
   if (vm.count("x1"))
     X_END = vm["x1"].as<double>();
   if (vm.count("y1"))
     Y_END = vm["y1"].as<double>();
   require(X_END > X_BEG && Y_END > Y_BEG, "Wrong limits of the computational domain");
+
+  if (vm.count("nfx"))
+    N_FINE_X = vm["nfx"].as<unsigned int>();
+  if (vm.count("nfy"))
+    N_FINE_Y = vm["nfy"].as<unsigned int>();
 
   if (vm.count("gamma"))
     IPDG_GAMMA = vm["gamma"].as<double>();
@@ -276,6 +290,8 @@ std::string Parameters::print() const
   str += "P = " + d2s(SOURCE_SUPPORT) + "\n";
   str += "xcen = " + d2s(SOURCE_CENTER_X) + "\n";
   str += "ycen = " + d2s(SOURCE_CENTER_Y) + "\n";
+  str += "n_fine_x = " + d2s(N_FINE_X) + "\n";
+  str += "n_fine_y = " + d2s(N_FINE_Y) + "\n";
 
   str += "number of subdomains = " + d2s(N_SUBDOMAINS) + "\n";
 

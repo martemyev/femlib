@@ -1,9 +1,10 @@
-#ifndef SPARSE_FORMAT_H
-#define SPARSE_FORMAT_H
+#ifndef FEM_SPARSE_FORMAT_H
+#define FEM_SPARSE_FORMAT_H
 
 #include <vector>
 #include <set>
 #include "dof_handler.h"
+#include "rectangle.h"
 
 
 
@@ -36,6 +37,8 @@ public:
              * @param dof_handler - handler of degrees of freedom
              */
   void make_sparse_format(const DoFHandler &dof_handler, COUPLING coupling);
+
+  void make_sparse_format(const std::vector<Rectangle> &rectangles, unsigned int order, CONNECTIVITY connectivity);
 
             /**
              * Get the serial number of nonzero element in the pattern
@@ -110,4 +113,4 @@ private: // ============================= PRIVATE ==============================
   CSRPattern& operator=(const CSRPattern&);
 };
 
-#endif // SPARSE_FORMAT_H
+#endif // FEM_SPARSE_FORMAT_H

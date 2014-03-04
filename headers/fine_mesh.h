@@ -3,6 +3,7 @@
 
 #include "point.h"
 #include "triangle.h"
+#include "rectangle.h"
 #include "line.h"
 #include <vector>
 #include <string>
@@ -47,6 +48,14 @@ public:
              * Get a constant reference to all mesh vertices
              */
   const std::vector<Point>& vertices() const;
+
+            /**
+             * Get a constant reference to all mesh rectangles
+             */
+  const std::vector<Rectangle>& rectangles() const;
+
+  unsigned int n_rectangles() const;
+  Rectangle* rectangle_orig(unsigned int number);
 
             /**
              * Get the number of mesh triangles
@@ -117,6 +126,9 @@ public:
 
   void boundary_vertices(const std::set<int> b_nodes);
 
+  void create_rectangular_grid();
+  Rectangle rectangle(unsigned int number) const;
+
 
 private: // ========================== PRIVATE =========================
             /**
@@ -147,6 +159,11 @@ private: // ========================== PRIVATE =========================
              * Mesh triangles
              */
   std::vector<Triangle> _triangles;
+
+            /**
+             * Mesh rectangles
+             */
+  std::vector<Rectangle> _rectangles;
 
             /**
              * Mesh lines (like boundary lines)

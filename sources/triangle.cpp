@@ -148,7 +148,7 @@ void Triangle::dof(unsigned int num, unsigned int value)
 
 
 
-void Triangle::local_mass_matrix(double **loc_mat, double coef_alpha) const
+void Triangle::local_mass_matrix(const double coef_alpha, double **loc_mat) const
 {
   expect(fabs(_detD) > 1e-15,
          "An attempt to calculate a local matrix for a singular triangle (detD = " + d2s(_detD, true) + ")");
@@ -173,7 +173,7 @@ void Triangle::local_mass_matrix(double **loc_mat, double coef_alpha) const
 
 
 
-void Triangle::local_stiffness_matrix(double **loc_mat, double coef_beta) const
+void Triangle::local_stiffness_matrix(const double coef_beta, double **loc_mat) const
 {
   expect(fabs(_detD) > 1e-15,
          "An attempt to calculate a local matrix for a singular triangle (detD = " + d2s(_detD, true) + ")");
@@ -217,9 +217,11 @@ void Triangle::calculate_barycentric(const std::vector<Point> &mesh_vertices)
 
 
 
-void Triangle::local_rhs_vector(double *loc_vec,
-                                double(*rhs_func)(const Point &point, double t, const Parameters &par),
-                                const std::vector<Point> &points, double time, const Parameters &param) const
+void Triangle::local_rhs_vector(double(*rhs_func)(const Point &point, double t, const Parameters &par),
+                                const std::vector<Point> &points,
+                                const double time,
+                                const Parameters &param,
+                                double *loc_vec) const
 {
   expect(fabs(_detD) > 1e-15,
          "An attempt to calculate a local matrix for a singular triangle (detD = " + d2s(_detD, true) + ")");
@@ -264,11 +266,11 @@ void Triangle::dis_edge(unsigned int serial_num, unsigned int num_edge)
 
 
 
-void Triangle::local_dg_boundary_matrix(double **loc_mat,
-                                        const Edge &edge,
-                                        double coef_a,
-                                        double gamma,
-                                        const DoFHandler &dof_handler) const
+void Triangle::local_dg_boundary_matrix(const Edge &edge,
+                                        const double coef_a,
+                                        const double gamma,
+                                        const DoFHandler &dof_handler,
+                                        double **loc_mat) const
 {
   const unsigned int dim_bound = Edge::n_vertices;
   for (int i = 0; i < dim_bound; ++i)
@@ -318,12 +320,12 @@ void Triangle::local_dg_boundary_matrix(double **loc_mat,
 
 
 
-void Triangle::local_dg_interior_matrix(double **loc_mat,
-                                        const Triangle &tri,
+void Triangle::local_dg_interior_matrix(const Triangle &tri,
                                         Edge edges[],
                                         double coefs[],
-                                        double gamma,
-                                        const DoFHandler &dof_handler) const
+                                        const double gamma,
+                                        const DoFHandler &dof_handler,
+                                        double **loc_mat) const
 {
   const unsigned int dim = Edge::n_vertices;
   for (int i = 0; i < 2 * dim; ++i)
@@ -397,17 +399,17 @@ void Triangle::local_dg_interior_matrix(double **loc_mat,
   }
 
   // B3
-  const double coef_a = 0.5 * (coefs[0] + coefs[1]); // average value
+  const double coef = 0.5 * (coefs[0] + coefs[1]); // average value
   double mat[][dim] = { { 2, 1 },
                         { 1, 2 } };
   for (int i = 0; i < dim; ++i)
   {
     for (int j = 0; j < dim; ++j)
     {
-      B_plus_plus[i][j]   += coef_a * gamma * mat[i][j] / 6.0;
-      B_plus_minus[i][j]  -= coef_a * gamma * mat[i][j] / 6.0;
-      B_minus_plus[i][j]  -= coef_a * gamma * mat[i][j] / 6.0;
-      B_minus_minus[i][j] += coef_a * gamma * mat[i][j] / 6.0;
+      B_plus_plus[i][j]   += coef * gamma * mat[i][j] / 6.0;
+      B_plus_minus[i][j]  -= coef * gamma * mat[i][j] / 6.0;
+      B_minus_plus[i][j]  -= coef * gamma * mat[i][j] / 6.0;
+      B_minus_minus[i][j] += coef * gamma * mat[i][j] / 6.0;
     }
   }
 
@@ -428,6 +430,7 @@ void Triangle::local_dg_interior_matrix(double **loc_mat,
 
 const Point Triangle::gradient_basis_function(unsigned int num_bf) const
 {
+  expect(fabs(_detD) > 1e-15, "The triangle is singular or the barycentric coordinates are not initialized");
   // gradient of i-th basis function is (Ai, Bi, 0), since it's 2D case
   return Point(_A[num_bf], _B[num_bf], 0);
 }

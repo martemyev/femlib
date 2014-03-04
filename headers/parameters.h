@@ -7,6 +7,11 @@
 #include <string>
 
 
+/**
+ * For comparison of two float numbers with double precision
+ */
+const double FLOAT_NUMBERS_EQUALITY_TOL = 1e-14;
+
 
 enum TIME_SCHEMES
 {
@@ -43,6 +48,11 @@ public:
              */
   double X_BEG, X_END, Y_BEG, Y_END;
   //double CL; // characteristic length of the triangles
+
+            /**
+             * The number of fine rectangular elements in x- and y-directions
+             */
+  unsigned int N_FINE_X, N_FINE_Y;
 
             /**
              * The time of the begin of the simulation (usually it's 0), and the time of its end

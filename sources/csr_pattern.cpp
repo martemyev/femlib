@@ -47,6 +47,12 @@ void CSRPattern::make_cg_sparse_format(const DoFHandler &dof_handler)
 
   require(dof_handler.n_dofs() != 0, "Dofs are not initialized yet");
 
+  if (dof_handler.fmesh().n_triangles() == 0)
+  {
+    make_sparse_format(dof_handler.fmesh().rectangles(), dof_handler.n_dofs(), DOFS);
+    return;
+  }
+
   // the number of rows of the matrix (and its order) of connectivity between degrees of freedom
   _order = dof_handler.n_dofs();
 
@@ -139,6 +145,69 @@ void CSRPattern::make_dg_sparse_format(const DoFHandler &dof_handler)
       }
     } // interior edges
   } // all edges
+
+  // initialization of the pattern
+  pattern_initialization(connect);
+
+  // free the memory
+  for (int i = 0; i < _order; ++i)
+    connect[i].clear();
+  delete[] connect;
+}
+
+
+
+void CSRPattern::make_sparse_format(const std::vector<Rectangle> &rectangles, unsigned int order, CONNECTIVITY connectivity)
+{
+  clear(); // free some memory in the case if sparse format was already made
+
+  // the number of rows of the matrix (and its order) of connectivity between vertices or degrees of freedom
+  _order = order;
+
+  std::set<unsigned int> *connect = new std::set<unsigned int>[_order];
+
+  // pass through all rectangles and all dofs on them
+  for (int cell = 0; cell < rectangles.size(); ++cell)
+  {
+    const Rectangle rect = rectangles[cell];
+
+    if (connectivity == DOFS)
+      expect(rect.n_dofs() != 0, "");
+
+    unsigned int N = -1; // the local number of vertices or degrees of freedom
+    if (connectivity == VERTICES)
+      N = Rectangle::n_vertices;
+    else if (connectivity == DOFS)
+      N = rect.n_dofs();
+    else
+      require(false, "");
+
+    for (int ii = 0; ii < N; ++ii)
+    {
+      unsigned int num_i = -1;
+      if (connectivity == VERTICES)
+        num_i = rect.vertex(ii); // the number of the first vertex
+      else if (connectivity == DOFS)
+        num_i = rect.dof(ii); // the number of the first degree of freedom
+      else
+        require(false, "");
+
+      for (int jj = 0; jj < N; ++jj)
+      {
+        unsigned int num_j = -1;
+        if (connectivity == VERTICES)
+          num_j = rect.vertex(jj); // the number of the second vertex
+        else if (connectivity == DOFS)
+          num_j = rect.dof(jj); // the number of the second degree of freedom
+        else
+          require(false, "");
+
+        // insert the values in the corresponding places
+        connect[num_i].insert(num_j);
+        connect[num_j].insert(num_i);
+      }
+    }
+  }
 
   // initialization of the pattern
   pattern_initialization(connect);
