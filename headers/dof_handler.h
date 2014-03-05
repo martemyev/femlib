@@ -8,9 +8,8 @@
 
 
 class FineMesh;
-class Parameters;
 class SymCSRPattern;
-
+class FiniteElement;
 
 
 enum COUPLING
@@ -37,10 +36,10 @@ public:
             /**
              * Distribute degrees of freedom according to fine mesh elements (connectivity of vertices),
              * order of basis functions (from param object), and type of finite element (CG, DG, etc).
-             * @param param - parameters of the problem
+             * @param fe - finite element
              * @param coupling - type of global assembling (CG, DG)
              */
-  void distribute_dofs(const Parameters &param, COUPLING coupling);
+  void distribute_dofs(const FiniteElement &fe, COUPLING coupling);
 
             /**
              * Edge numeration
@@ -129,13 +128,13 @@ private:
              * Distribute degrees of freedom in case of first order basis functions
              * for continuous Galerking method
              */
-  void distribute_cg_first(const Parameters &param);
+  void distribute_cg_first(const FiniteElement &fe);
 
             /**
              * Distribute degrees of freedom in case of first order basis functions
              * for discontinuous Galerkin method
              */
-  void distribute_dg_first(const Parameters &param);
+  void distribute_dg_first(const FiniteElement &fe);
 };
 
 

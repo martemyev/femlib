@@ -1,6 +1,6 @@
 #include "rectangle.h"
-#include "parameters.h"
 #include "auxiliary_functions.h"
+#include <cmath>
 
 
 Rectangle::Rectangle()
@@ -118,10 +118,9 @@ void Rectangle::local_mass_matrix(const double coef_alpha, double **loc_mat) con
 
 
 
-void Rectangle::local_rhs_vector(double (*rhs_func)(const Point& p, double t, const Parameters &par),
+void Rectangle::local_rhs_vector(double (*rhs_func)(const Point& p, double t),
                                  const std::vector<Point> &points,
                                  const double time,
-                                 const Parameters &param,
                                  double *loc_vec) const
 {
   switch (_dofs.size())
@@ -139,7 +138,7 @@ void Rectangle::local_rhs_vector(double (*rhs_func)(const Point& p, double t, co
       {
         loc_vec[i] = 0;
         for (int j = 0; j < n_dofs_first; ++j)
-          loc_vec[i] += hx * hy * mat[i][j] * rhs_func(points[_dofs[j]], time, param) / 36.;
+          loc_vec[i] += hx * hy * mat[i][j] * rhs_func(points[_dofs[j]], time) / 36.;
       }
       return;
     }
@@ -152,10 +151,10 @@ void Rectangle::local_rhs_vector(double (*rhs_func)(const Point& p, double t, co
 
 void Rectangle::check_rectangle() const
 {
-  expect(fabs(_X[0] - _X[2]) < FLOAT_NUMBERS_EQUALITY_TOL &&
-         fabs(_X[1] - _X[3]) < FLOAT_NUMBERS_EQUALITY_TOL &&
-         fabs(_Y[0] - _Y[1]) < FLOAT_NUMBERS_EQUALITY_TOL &&
-         fabs(_Y[2] - _Y[3]) < FLOAT_NUMBERS_EQUALITY_TOL,
+  expect(fabs(_X[0] - _X[2]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
+         fabs(_X[1] - _X[3]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
+         fabs(_Y[0] - _Y[1]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
+         fabs(_Y[2] - _Y[3]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE,
          "This is not a rectangle, since the angles are not right, OR the numeration of the vertices is not the one that was expected."
          " The differences are: fabs(_X[0] - _X[2]) = " + d2s(fabs(_X[0] - _X[2])) +
          " fabs(_X[1] - _X[3]) = " + d2s(fabs(_X[1] - _X[3])) +

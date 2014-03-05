@@ -9,7 +9,6 @@
 #include <string>
 #include <set>
 
-class Parameters;
 
 
 class FineMesh
@@ -18,7 +17,7 @@ public:
             /**
              * Constructor
              */
-  FineMesh(Parameters *param);
+  FineMesh();
 
             /**
              * Destructor
@@ -29,7 +28,9 @@ public:
              * Read the mesh from a file
              * @param filename - a name of the file with the mesh
              */
-  void read(const std::string &filename);
+  void read(const std::string &filename,
+            const Point &declared_min_point = Point(),
+            const Point &declared_max_point = Point());
 
             /**
              * Get the number of mesh vertices
@@ -126,16 +127,13 @@ public:
 
   void boundary_vertices(const std::set<int> b_nodes);
 
-  void create_rectangular_grid();
+  void create_rectangular_grid(double X_BEG, double X_END,
+                               double Y_BEG, double Y_END,
+                               unsigned int N_FINE_X, unsigned int N_FINE_Y);
   Rectangle rectangle(unsigned int number) const;
 
 
 private: // ========================== PRIVATE =========================
-            /**
-             * Parameters of the solving problem
-             */
-  Parameters *_param;
-
             /**
              * Mesh vertices
              */
@@ -198,7 +196,8 @@ private: // ========================== PRIVATE =========================
             /**
              * Generate the list of boundary vertices
              */
-  void boundary_vertices_initialization();
+  void boundary_vertices_initialization(const Point &declared_min_point,
+                                        const Point &declared_max_point);
 };
 
 #endif // FINE_MESH_H

@@ -217,10 +217,9 @@ void Triangle::calculate_barycentric(const std::vector<Point> &mesh_vertices)
 
 
 
-void Triangle::local_rhs_vector(double(*rhs_func)(const Point &point, double t, const Parameters &par),
+void Triangle::local_rhs_vector(double(*rhs_func)(const Point &point, double t),
                                 const std::vector<Point> &points,
                                 const double time,
-                                const Parameters &param,
                                 double *loc_vec) const
 {
   expect(fabs(_detD) > 1e-15,
@@ -238,7 +237,7 @@ void Triangle::local_rhs_vector(double(*rhs_func)(const Point &point, double t, 
     {
       loc_vec[i] = 0.;
       for (int j = 0; j < n_dofs_first; ++j)
-        loc_vec[i] += mat[i][j] * rhs_func(points[_dofs[j]], time, param);
+        loc_vec[i] += mat[i][j] * rhs_func(points[_dofs[j]], time);
       loc_vec[i] *= fabs(_detD) / 24.;
     }
     return;

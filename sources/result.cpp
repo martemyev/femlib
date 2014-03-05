@@ -1,6 +1,5 @@
 #include "result.h"
 #include "auxiliary_functions.h"
-#include "parameters.h"
 #include "dof_handler.h"
 #include "fine_mesh.h"
 #include "point.h"
@@ -9,9 +8,8 @@
 
 
 
-Result::Result(const Parameters *param, const DoFHandler *dof_handler)
-  : _param(param),
-    _dof_handler(dof_handler)
+Result::Result(const DoFHandler *dof_handler)
+  : _dof_handler(dof_handler)
 { }
 
 
@@ -114,6 +112,8 @@ void Result::write_vtu(const std::string &filename,
 
 
 void Result::write_vts(const std::string &filename,
+                       unsigned int N_FINE_X,
+                       unsigned int N_FINE_Y,
                        const Vec &solution,
                        const Vec &exact_solution) const
 {
@@ -150,8 +150,8 @@ void Result::write_vts(const std::string &filename,
 
   out << "<?xml version=\"1.0\"?>\n";
   out << "<VTKFile type=\"StructuredGrid\" version=\"0.1\" byte_order=\"LittleEndian\">\n";
-  out << "  <StructuredGrid WholeExtent=\"1 " << _param->N_FINE_X << " 1 " << _param->N_FINE_Y << " 1 1\">\n";
-  out << "    <Piece Extent=\"1 " << _param->N_FINE_X << " 1 " << _param->N_FINE_Y << " 1 1\">\n";
+  out << "  <StructuredGrid WholeExtent=\"1 " << N_FINE_X + 1 << " 1 " << N_FINE_Y + 1 << " 1 1\">\n";
+  out << "    <Piece Extent=\"1 " << N_FINE_X + 1 << " 1 " << N_FINE_Y + 1 << " 1 1\">\n";
   out << "      <PointData Scalars=\"scalars\">\n";
   out << "        <DataArray type=\"Float64\" Name=\"U_solution\" format=\"ascii\">\n";
   for (int i = 0; i < dofs.size(); ++i)

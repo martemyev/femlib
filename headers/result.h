@@ -4,7 +4,6 @@
 #include "petscvec.h"
 #include <string>
 
-class Parameters;
 class DoFHandler;
 
 
@@ -18,7 +17,7 @@ public:
              * Constructor
              * @param dof_handler - pointer to the handler of degrees of freedom
              */
-  Result(const Parameters *param, const DoFHandler *dof_handler);
+  Result(const DoFHandler *dof_handler);
 
             /**
              * Destructor
@@ -26,19 +25,25 @@ public:
   ~Result();
 
             /**
-             * Write the results to file in vtk(vtu) format to work then in Paraview
+             * Write the results to file in vtk(vtu) unstructured format to work then in Paraview
              * @param filename - the name of output file
              */
-  void write_vtu(const std::string &filename, const Vec &solution, const Vec &exact_solution = 0) const;
-  void write_vts(const std::string &filename, const Vec &solution, const Vec &exact_solution = 0) const;
+  void write_vtu(const std::string &filename,
+                 const Vec &solution,
+                 const Vec &exact_solution = 0) const;
+
+            /**
+             * Write the results to file in vtk(vts) structured format to work then in Paraview
+             * @param filename - the name of output file
+             */
+  void write_vts(const std::string &filename,
+                 unsigned int N_FINE_X,
+                 unsigned int N_FINE_Y,
+                 const Vec &solution,
+                 const Vec &exact_solution = 0) const;
 
 
 private: //========================= PRIVATE ===================
-            /**
-             * Parameters of the problem
-             */
-  const Parameters *_param;
-
             /**
              * Constant pointer to dof_handler
              */

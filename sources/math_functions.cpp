@@ -33,3 +33,10 @@ void normalize(Point &vec)
   expect(norm > 1e-14, "Vector has very small length (" + d2s(norm) + "), so it's dangerous to normalize it");
   vec /= norm;
 }
+
+
+
+double norm(const Point &vec)
+{
+  return sqrt(dot_product(vec, vec));
+}

@@ -3,8 +3,6 @@
 
 #include "quadrangle.h"
 
-class Parameters;
-
 
 
 /**
@@ -97,13 +95,11 @@ public:
              * @param rhs_func - pointer to an rhs function
              * @param points - all mesh vertices (or relevant points, like degrees of freedom)
              * @param time - particular time for which we calculate this rhs vector
-             * @param param - parameters of the task, some of them are used in rhs function
              * @param loc_vec - output vector
              */
-  void local_rhs_vector(double(*rhs_func)(const Point &point, double t, const Parameters &par),
+  void local_rhs_vector(double(*rhs_func)(const Point &point, double t),
                         const std::vector<Point> &points,
                         const double time,
-                        const Parameters &param,
                         double *loc_vec) const;
 
   unsigned int n_dofs() const;

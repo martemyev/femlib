@@ -29,4 +29,11 @@ void normalize(Point &vec);
 
 
 
+/**
+ * Norm of a vector represented by a Point object
+ */
+double norm(const Point &vec);
+
+
+
 #endif // MATH_FUNCTIONS_H

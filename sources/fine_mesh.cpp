@@ -1,11 +1,12 @@
 #include "fine_mesh.h"
 #include "auxiliary_functions.h"
+#include "math_functions.h"
 #include <fstream>
 #include <map>
+#include <algorithm>
 
 
-FineMesh::FineMesh(Parameters *param)
-  : _param(param)
+FineMesh::FineMesh()
 { }
 
 
@@ -29,7 +30,9 @@ void FineMesh::clear()
 
 
 
-void FineMesh::read(const std::string &file)
+void FineMesh::read(const std::string &file,
+                    const Point &declared_min_point,
+                    const Point &declared_max_point)
 {
   std::ifstream in(file.c_str());
   require(in, "File " + file + " cannot be opened!");
@@ -268,22 +271,30 @@ void FineMesh::read(const std::string &file)
   in.close(); // close the file
 
   // generate the list of boundary vertices
-  boundary_vertices_initialization();
+  boundary_vertices_initialization(declared_min_point, declared_max_point);
 }
 
 
 
-void FineMesh::boundary_vertices_initialization()
+void FineMesh::boundary_vertices_initialization(const Point &declared_min_point,
+                                                const Point &declared_max_point)
 {
   if (_lines.size() == 0) // there are no boundary lines in the mesh
   {
+    require(norm(declared_max_point - declared_min_point) > FLOAT_NUMBERS_EQUALITY_TOLERANCE,
+            "There are no boundary lines in the mesh, and boundaries seem not to be defined through min and max points");
     // in this case the domain should be rectangular.
-    const double tol = 1e-14;
-    require(fabs(_min_coord.coord(0) - _param->X_BEG) < tol &&
-            fabs(_min_coord.coord(1) - _param->Y_BEG) < tol &&
-            fabs(_max_coord.coord(0) - _param->X_END) < tol &&
-            fabs(_max_coord.coord(1) - _param->Y_END) < tol,
-            "There are no boundary lines and computational domain defined by parameters (X_BEG, Y_BEG, etc) is not equal to the domain read from the mesh file");
+    const double tol = FLOAT_NUMBERS_EQUALITY_TOLERANCE;
+    require(fabs(_min_coord.coord(0) - declared_min_point.coord(0)) < tol &&
+            fabs(_min_coord.coord(1) - declared_min_point.coord(1)) < tol &&
+            fabs(_max_coord.coord(0) - declared_max_point.coord(0)) < tol &&
+            fabs(_max_coord.coord(1) - declared_max_point.coord(1)) < tol,
+            "There are no boundary lines and declared computational domain: (x0,y0)x(x1,y1)=(" +
+            d2s(declared_min_point.coord(0)) + ", " + d2s(declared_min_point.coord(1)) + ")x(" +
+            d2s(declared_max_point.coord(0)) + ", " + d2s(declared_max_point.coord(1)) +
+            ") is not equal to the domain read from the mesh file: (" +
+            d2s(_min_coord.coord(0)) + ", " + d2s(_min_coord.coord(1)) + ")x(" +
+            d2s(_max_coord.coord(0)) + ", " + d2s(_max_coord.coord(1)) + ")");
 
     // find nodes that lie on the boundary of the computational domain
     for (int i = 0; i < _vertices.size(); ++i)
@@ -426,6 +437,7 @@ Line FineMesh::line(unsigned int number) const
 
 std::vector<int> const& FineMesh::boundary_vertices() const
 {
+  expect(!_boundary_vertices.empty(), "The vector of boundary vertices is empty");
   return _boundary_vertices;
 }
 
@@ -491,24 +503,28 @@ Rectangle* FineMesh::rectangle_orig(unsigned int number)
 
 
 
-void FineMesh::create_rectangular_grid()
+void FineMesh::create_rectangular_grid(double X_BEG, double X_END,
+                                       double Y_BEG, double Y_END,
+                                       unsigned int N_FINE_X, unsigned int N_FINE_Y)
 {
-  const double hx = (_param->X_END - _param->X_BEG) / (double)_param->N_FINE_X; // step in x-direction
-  const double hy = (_param->Y_END - _param->Y_BEG) / (double)_param->N_FINE_Y; // step in y-direction
+  require(X_END > X_BEG && Y_END > Y_BEG, "");
 
-  const unsigned int n_vertices = (_param->N_FINE_X + 1) * (_param->N_FINE_Y + 1); // the total number of vertices
+  const double hx = (X_END - X_BEG) / (double)N_FINE_X; // step in x-direction
+  const double hy = (Y_END - Y_BEG) / (double)N_FINE_Y; // step in y-direction
+
+  const unsigned int n_vertices = (N_FINE_X + 1) * (N_FINE_Y + 1); // the total number of vertices
   _vertices.resize(n_vertices); // allocate the memory for all vertices
 
-  const unsigned int n_rectangles = _param->N_FINE_X * _param->N_FINE_Y; // the total number of rectangles
+  const unsigned int n_rectangles = N_FINE_X * N_FINE_Y; // the total number of rectangles
   _rectangles.resize(n_rectangles); // allocate the memory for all rectangles
 
   unsigned int ver = 0; // number of a current vertex
-  for (int i = 0; i < _param->N_FINE_Y + 1; ++i)
+  for (int i = 0; i < N_FINE_Y + 1; ++i)
   {
-    const double y = (i == _param->N_FINE_Y ? _param->Y_END : _param->Y_BEG + i * hy);
-    for (int j = 0; j < _param->N_FINE_X + 1; ++j)
+    const double y = (i == N_FINE_Y ? Y_END : Y_BEG + i * hy);
+    for (int j = 0; j < N_FINE_X + 1; ++j)
     {
-      const double x = (j == _param->N_FINE_X ? _param->X_END : _param->X_BEG + j * hx);
+      const double x = (j == N_FINE_X ? X_END : X_BEG + j * hx);
       _vertices[ver] = Point(x, y, 0);
       ++ver;
     }
@@ -516,23 +532,28 @@ void FineMesh::create_rectangular_grid()
 
   unsigned int rect = 0; // number of a current rectangle
   std::vector<unsigned int> vert(Rectangle::n_vertices); // the numbers of vertices describing a rectangle
-  for (int i = 0; i < _param->N_FINE_Y; ++i)
+  for (int i = 0; i < N_FINE_Y; ++i)
   {
-    for (int j = 0; j < _param->N_FINE_X; ++j)
+    for (int j = 0; j < N_FINE_X; ++j)
     {
       // numeration of rectangle's vertices is the following
       // 2 --- 3
       // |     |
       // |     |
       // 0 --- 1
-      vert[0] = i * (_param->N_FINE_X + 1) + j;
-      vert[1] = i * (_param->N_FINE_X + 1) + j + 1;
-      vert[2] = (i + 1) * (_param->N_FINE_X + 1) + j;
-      vert[3] = (i + 1) * (_param->N_FINE_X + 1) + j + 1;
+      vert[0] = i * (N_FINE_X + 1) + j;
+      vert[1] = i * (N_FINE_X + 1) + j + 1;
+      vert[2] = (i + 1) * (N_FINE_X + 1) + j;
+      vert[3] = (i + 1) * (N_FINE_X + 1) + j + 1;
       _rectangles[rect] = Rectangle(vert, _vertices);
       ++rect;
     }
   }
+
+  // boundary vertices initialization
+  _min_coord = Point(X_BEG, Y_BEG);
+  _max_coord = Point(X_END, Y_END);
+  boundary_vertices_initialization(_min_coord, _max_coord);
 }
 
 

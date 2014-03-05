@@ -8,4 +8,6 @@
 
 const std::string HOME_DIRECTORY = "/u/artemyev";
 
+const double FLOAT_NUMBERS_EQUALITY_TOLERANCE = 1e-14;
+
 #endif // FEM_CONFIG_H

@@ -1,8 +1,9 @@
 #include "dof_handler.h"
 #include "fine_mesh.h"
-#include "parameters.h"
 #include "auxiliary_functions.h"
 #include "sym_csr_pattern.h"
+#include "finite_element.h"
+#include <algorithm>
 
 
 DoFHandler::DoFHandler(FineMesh *fmesh)
@@ -28,19 +29,19 @@ DoFHandler::~DoFHandler()
 
 
 
-void DoFHandler::distribute_dofs(const Parameters &param, COUPLING coupling)
+void DoFHandler::distribute_dofs(const FiniteElement &fe, COUPLING coupling)
 {
-  switch (param.FE_ORDER)
+  switch (fe.order())
   {
   case 1:
     {
       switch (coupling)
       {
       case CG:
-        distribute_cg_first(param);
+        distribute_cg_first(fe);
         return;
       case DG:
-        distribute_dg_first(param);
+        distribute_dg_first(fe);
         return;
       default:
         require(false, "Unknown coupling scheme (not CG, nor DG)");
@@ -48,15 +49,15 @@ void DoFHandler::distribute_dofs(const Parameters &param, COUPLING coupling)
       return;
     }
   default:
-    require(false, "Incorrect order of fe basis functions (" + d2s(param.FE_ORDER) + ")");
+    require(false, "Incorrect order of fe basis functions (" + d2s(fe.order()) + ")");
   }
 }
 
 
 
-void DoFHandler::distribute_cg_first(const Parameters &param)
+void DoFHandler::distribute_cg_first(const FiniteElement &fe)
 {
-  require(param.FE_ORDER == 1, "This is not implemented for fe order other than 1");
+  require(fe.order() == 1, "This is not implemented for fe order other than 1");
 
   _dofs.resize(_fmesh->n_vertices());
   for (int ver = 0; ver < _fmesh->n_vertices(); ++ver)
@@ -91,9 +92,9 @@ void DoFHandler::distribute_cg_first(const Parameters &param)
 
 
 
-void DoFHandler::distribute_dg_first(const Parameters &param)
+void DoFHandler::distribute_dg_first(const FiniteElement &fe)
 {
-  require(param.FE_ORDER == 1, "This is not implemented for fe order other than 1");
+  require(fe.order() == 1, "This is not implemented for fe order other than 1");
 
   // each triangle has n_dofs_per_triangle degrees of freedom
   const unsigned int n_dofs = Triangle::n_dofs_first * _fmesh->n_triangles();
