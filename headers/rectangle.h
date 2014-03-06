@@ -4,6 +4,8 @@
 #include "quadrangle.h"
 
 
+class Function;
+
 
 /**
  * Rectangle is a quadrangle that has right angles (Pi/2)
@@ -97,7 +99,7 @@ public:
              * @param time - particular time for which we calculate this rhs vector
              * @param loc_vec - output vector
              */
-  void local_rhs_vector(double(*rhs_func)(const Point &point, double t),
+  void local_rhs_vector(const Function &func,
                         const std::vector<Point> &points,
                         const double time,
                         double *loc_vec) const;

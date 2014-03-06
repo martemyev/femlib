@@ -7,6 +7,7 @@
 
 class Edge;
 class DoFHandler;
+class Function;
 
 
 /**
@@ -205,7 +206,7 @@ public:
              * @param time - particular time for which we calculate this rhs vector
              * @param loc_vec - output vector
              */
-  void local_rhs_vector(double(*rhs_func)(const Point &point, double t),
+  void local_rhs_vector(const Function &func,
                         const std::vector<Point> &points,
                         const double time,
                         double *loc_vec) const;

@@ -3,6 +3,7 @@
 #include "edge.h"
 #include "dof_handler.h"
 #include "math_functions.h"
+#include "function.h"
 
 
 Triangle::Triangle()
@@ -217,7 +218,7 @@ void Triangle::calculate_barycentric(const std::vector<Point> &mesh_vertices)
 
 
 
-void Triangle::local_rhs_vector(double(*rhs_func)(const Point &point, double t),
+void Triangle::local_rhs_vector(const Function &func,
                                 const std::vector<Point> &points,
                                 const double time,
                                 double *loc_vec) const
@@ -237,7 +238,7 @@ void Triangle::local_rhs_vector(double(*rhs_func)(const Point &point, double t),
     {
       loc_vec[i] = 0.;
       for (int j = 0; j < n_dofs_first; ++j)
-        loc_vec[i] += mat[i][j] * rhs_func(points[_dofs[j]], time);
+        loc_vec[i] += mat[i][j] * func.value(points[_dofs[j]], time);
       loc_vec[i] *= fabs(_detD) / 24.;
     }
     return;

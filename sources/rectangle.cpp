@@ -1,6 +1,7 @@
 #include "rectangle.h"
 #include "auxiliary_functions.h"
-#include <cmath>
+#include "function.h"
+#include "math_functions.h"
 
 
 Rectangle::Rectangle()
@@ -118,7 +119,7 @@ void Rectangle::local_mass_matrix(const double coef_alpha, double **loc_mat) con
 
 
 
-void Rectangle::local_rhs_vector(double (*rhs_func)(const Point& p, double t),
+void Rectangle::local_rhs_vector(const Function &func,
                                  const std::vector<Point> &points,
                                  const double time,
                                  double *loc_vec) const
@@ -138,7 +139,7 @@ void Rectangle::local_rhs_vector(double (*rhs_func)(const Point& p, double t),
       {
         loc_vec[i] = 0;
         for (int j = 0; j < n_dofs_first; ++j)
-          loc_vec[i] += hx * hy * mat[i][j] * rhs_func(points[_dofs[j]], time) / 36.;
+          loc_vec[i] += hx * hy * mat[i][j] * func.value(points[_dofs[j]], time) / 36.;
       }
       return;
     }
