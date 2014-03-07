@@ -1,6 +1,7 @@
 #include "auxiliary_functions.h"
 #include <sstream>
 #include <stdexcept>
+#include "boost/filesystem.hpp"
 
 
 //-------------------------------------------------------
@@ -67,4 +68,19 @@ void requirement_fails(const char *file,
                     "\nline = " + d2s(line) +
                     "\nmessage = " + message + "\n";
   throw std::runtime_error(exc);
+}
+
+
+
+
+//-------------------------------------------------------
+//
+// extract a stem from a long filename with a path
+//
+//-------------------------------------------------------
+std::string stem(const std::string &filename)
+{
+  using namespace boost::filesystem;
+  path filename_path(filename);
+  return filename_path.stem().string();
 }

@@ -4,6 +4,9 @@
 #include "petscvec.h"
 #include "point.h"
 
+const double FLOAT_NUMBERS_EQUALITY_TOLERANCE = 1e-14;
+const double PI = 3.141592654;
+
 
 /**
  * Relative error in 2-norm between two vectors

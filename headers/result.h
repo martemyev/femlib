@@ -3,6 +3,7 @@
 
 #include "petscvec.h"
 #include <string>
+#include <vector>
 
 class DoFHandler;
 
@@ -39,6 +40,8 @@ public:
   void write_vts(const std::string &filename,
                  unsigned int N_FINE_X,
                  unsigned int N_FINE_Y,
+                 const std::vector<double> &coef_alpha,
+                 const std::vector<double> &coef_beta,
                  const Vec &solution,
                  const Vec &exact_solution = 0) const;
 

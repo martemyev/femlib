@@ -114,6 +114,8 @@ void Result::write_vtu(const std::string &filename,
 void Result::write_vts(const std::string &filename,
                        unsigned int N_FINE_X,
                        unsigned int N_FINE_Y,
+                       const std::vector<double> &coef_alpha,
+                       const std::vector<double> &coef_beta,
                        const Vec &solution,
                        const Vec &exact_solution) const
 {
@@ -165,6 +167,18 @@ void Result::write_vts(const std::string &filename,
     out << "        </DataArray>\n";
   }
   out << "      </PointData>\n";
+  out << "      <CellData Scalars=\"scalars\">\n";
+  out << "        <DataArray type=\"Float64\" Name=\"coef_alpha\" format=\"ascii\">\n";
+  expect(coef_alpha.size() == N_FINE_X * N_FINE_Y, "look at the code");
+  for (int i = 0; i < coef_alpha.size(); ++i)
+    out << coef_alpha[i] << "\n";
+  out << "        </DataArray>\n";
+  out << "        <DataArray type=\"Float64\" Name=\"coef_beta\" format=\"ascii\">\n";
+  expect(coef_beta.size() == N_FINE_X * N_FINE_Y, "look at the code");
+  for (int i = 0; i < coef_beta.size(); ++i)
+    out << coef_beta[i] << "\n";
+  out << "        </DataArray>\n";
+  out << "      </CellData>\n";
   out << "      <Points>\n";
   out << "        <DataArray type=\"Float64\" NumberOfComponents=\"3\" format=\"ascii\">\n";
   for (int i = 0; i < fmesh.n_vertices(); ++i)

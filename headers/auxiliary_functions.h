@@ -81,4 +81,13 @@ void requirement_fails(const char *file,
                        std::string message);
 
 
+
+//-------------------------------------------------------
+//
+// extract a stem from a long filename with a path
+//
+//-------------------------------------------------------
+std::string stem(const std::string &filename);
+
+
 #endif // AUXILIARY_FUNCTIONS_H
