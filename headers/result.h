@@ -40,10 +40,10 @@ public:
   void write_vts(const std::string &filename,
                  unsigned int N_FINE_X,
                  unsigned int N_FINE_Y,
-                 const std::vector<double> &coef_alpha,
-                 const std::vector<double> &coef_beta,
                  const Vec &solution,
-                 const Vec &exact_solution = 0) const;
+                 const Vec &exact_solution = 0,
+                 const std::vector<double> &coef_alpha = std::vector<double>(),
+                 const std::vector<double> &coef_beta = std::vector<double>()) const;
 
 
 private: //========================= PRIVATE ===================

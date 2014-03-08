@@ -3,7 +3,7 @@
 
 #include <string>
 
-#define DEBUG
+/* #undef DEBUG */
 #define HAVE_64BIT_SIZE_T
 
 const std::string HOME_DIRECTORY = "/u/artemyev";

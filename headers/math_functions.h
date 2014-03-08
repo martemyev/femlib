@@ -5,6 +5,7 @@
 #include "point.h"
 
 const double FLOAT_NUMBERS_EQUALITY_TOLERANCE = 1e-14;
+const double FLOAT_NUMBERS_EQUALITY_REDUCED_TOLERANCE = 1e-6;
 const double PI = 3.141592654;
 
 
