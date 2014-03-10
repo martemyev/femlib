@@ -1,12 +1,29 @@
 cmake_minimum_required(VERSION 2.8)
 
+# --- project ---
+#set(CMAKE_CXX_COMPILER mpicxx)
+project(fem)
+add_definitions(-std=c++0x -Wall)
+# ---------------
 
-set(CMAKE_BUILD_TYPE Debug CACHE STRING "Debug | Release")
-set(DEBUG ON CACHE BOOL "for the internal usage - not the compiler debug options")
 
-if(CMAKE_BUILD_TYPE MATCHES Release)
-  set(DEBUG OFF CACHE BOOL "for the internal usage - not the compiler debug options" FORCE)
-endif(CMAKE_BUILD_TYPE MATCHES Release)
+# --- choosing build type ---
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build: Debug | Release" FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  set(DEBUG ON CACHE BOOL "This option is for internal usage - not the compiler debug options" FORCE)
+  message("build type: Debug")
+  message("compiler flags: ${CMAKE_CXX_FLAGS_DEBUG}")
+elseif(CMAKE_BUILD_TYPE MATCHES Release)
+  set(DEBUG OFF CACHE BOOL "This option is for internal usage - not the compiler debug options" FORCE)
+  message("build type: Release")
+  message("compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
+else(CMAKE_BUILD_TYPE MATCHES Debug)
+  message(FATAL_ERROR "Unknown build type: ${CMAKE_BUILD_TYPE}")
+endif(CMAKE_BUILD_TYPE MATCHES Debug)
+# ---------------------------
 
 
 # --- define and connect some important directories ---
@@ -16,13 +33,6 @@ set(LIB_DIR     ${INSTALL_DIR}/lib)
 include_directories(${INCLUDE_DIR})
 link_directories(${LIB_DIR})
 # -----------------------------------------------------
-
-
-# --- project ---
-#set(CMAKE_CXX_COMPILER mpicxx)
-project(fem)
-add_definitions(-std=c++0x)
-# ---------------
 
 
 # --- boost ---
@@ -88,15 +98,17 @@ FILE(GLOB HDR_LIST "${PROJECT_SOURCE_DIR}/headers/*.h")      # all .h files
 # ---------------------------
 
 
-# ------
-message("build type   " ${CMAKE_BUILD_TYPE})
-#message("gtest lib    " ${GTEST_LIB})
-message("boost libs   " ${Boost_LIBRARIES})
-message("petsc lib    " ${PETSC_LIB})
-#message("mpi lib      " ${MPI_LIB})
-message("SRC_LIST     " ${SRC_LIST})
-message("HDR_LIST     " ${HDR_LIST})
-# ------
+# --- some options and dependencies ---
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+  message("build type   " ${CMAKE_BUILD_TYPE})
+  #message("gtest lib    " ${GTEST_LIB})
+  message("boost libs   " ${Boost_LIBRARIES})
+  message("petsc lib    " ${PETSC_LIB})
+  #message("mpi lib      " ${MPI_LIB})
+  message("SRC_LIST     " ${SRC_LIST})
+  message("HDR_LIST     " ${HDR_LIST})
+endif(CMAKE_BUILD_TYPE MATCHES Debug)
+# -------------------------------------
 
 
 #if(CMAKE_BUILD_TYPE MATCHES Debug)
