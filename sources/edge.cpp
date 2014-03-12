@@ -105,7 +105,7 @@ const Point Edge::normal(const Triangle &tri, const std::vector<Point> &points) 
   const Point B = points[_vertices[1]]; // second vertex
   // take the number of the third vertex
   int third_vertex = -1;
-  for (int i = 0; i < Triangle::n_dofs_first && third_vertex == -1; ++i)
+  for (unsigned i = 0; i < Triangle::n_dofs_first && third_vertex == -1; ++i)
     if (tri.dof(i) != _vertices[0] &&
         tri.dof(i) != _vertices[1])
       third_vertex = tri.dof(i);

@@ -10,7 +10,7 @@ Triangle::Triangle()
   : MeshElement(n_vertices, n_edges, n_faces, gmsh_el_type),
     _detD(0.)
 {
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
     _A[i] = _B[i] = _C[i] = 0.;
   _dis_edges.resize(n_edges, 0);
 }
@@ -77,7 +77,7 @@ Triangle::Triangle(const Triangle &tri)
     _dofs(tri._dofs),
     _detD(tri._detD)
 {
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
   {
     _A[i] = tri._A[i];
     _B[i] = tri._B[i];
@@ -94,13 +94,15 @@ Triangle& Triangle::operator =(const Triangle &tri)
   _ghost_cells = tri._ghost_cells;
   _dofs = tri._dofs;
   _detD = tri._detD;
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
   {
     _A[i] = tri._A[i];
     _B[i] = tri._B[i];
     _C[i] = tri._C[i];
   }
   _dis_edges = tri._dis_edges;
+
+  return *this;
 }
 
 
@@ -162,8 +164,8 @@ void Triangle::local_mass_matrix(const double coef_alpha, double **loc_mat) cons
                                          { 1., 2., 1. },
                                          { 1., 1., 2. }
                                        };
-    for (int i = 0; i < n_dofs_first; ++i)
-      for (int j = 0; j < n_dofs_first; ++j)
+    for (unsigned int i = 0; i < n_dofs_first; ++i)
+      for (unsigned int j = 0; j < n_dofs_first; ++j)
         loc_mat[i][j] = coef_alpha * fabs(_detD) * mat[i][j] / 24.;
     return;
   }
@@ -183,8 +185,8 @@ void Triangle::local_stiffness_matrix(const double coef_beta, double **loc_mat) 
   {
   case n_dofs_first:
   {
-    for (int i = 0; i < n_dofs_first; ++i)
-      for (int j = 0; j < n_dofs_first; ++j)
+    for (unsigned int i = 0; i < n_dofs_first; ++i)
+      for (unsigned int j = 0; j < n_dofs_first; ++j)
         loc_mat[i][j] = coef_beta * fabs(_detD) * (_A[i]*_A[j] + _B[i]*_B[j]) / 2.;
     return;
   }
@@ -198,7 +200,7 @@ void Triangle::local_stiffness_matrix(const double coef_beta, double **loc_mat) 
 void Triangle::calculate_barycentric(const std::vector<Point> &mesh_vertices)
 {
   double x[n_vertices], y[n_vertices]; // coordinates of the triangle's vertices
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
   {
     const unsigned int vertex = _vertices[i];
     x[i] = mesh_vertices[vertex].coord(0); // x-coordinate
@@ -234,10 +236,10 @@ void Triangle::local_rhs_vector(const Function &func,
                                          { 1., 2., 1. },
                                          { 1., 1., 2. }
                                        };
-    for (int i = 0; i < n_dofs_first; ++i)
+    for (unsigned int i = 0; i < n_dofs_first; ++i)
     {
       loc_vec[i] = 0.;
-      for (int j = 0; j < n_dofs_first; ++j)
+      for (unsigned int j = 0; j < n_dofs_first; ++j)
         loc_vec[i] += mat[i][j] * func.value(points[_dofs[j]], time);
       loc_vec[i] *= fabs(_detD) / 24.;
     }
@@ -273,8 +275,8 @@ void Triangle::local_dg_boundary_matrix(const Edge &edge,
                                         double **loc_mat) const
 {
   const unsigned int dim_bound = Edge::n_vertices;
-  for (int i = 0; i < dim_bound; ++i)
-    for (int j = 0; j < dim_bound; ++j)
+  for (unsigned int i = 0; i < dim_bound; ++i)
+    for (unsigned int j = 0; j < dim_bound; ++j)
       loc_mat[i][j] = 0.0; // zero initialization
 
   const Point normal = edge.normal(*this, dof_handler.dofs()); // outward unit normal vector to the edge
@@ -282,10 +284,10 @@ void Triangle::local_dg_boundary_matrix(const Edge &edge,
   // we need to take a gradient of basis function associated with the first vertex.
   // so we need to find out what is its number
   Point grad_bf[Edge::n_vertices];
-  for (int v = 0; v < Edge::n_vertices; ++v)
+  for (unsigned int v = 0; v < Edge::n_vertices; ++v)
   {
     int bf = -1;
-    for (int i = 0; i < n_dofs_first && bf == -1; ++i)
+    for (unsigned int i = 0; i < n_dofs_first && bf == -1; ++i)
       if (_dofs[i] == edge.vertex(v))
         bf = i;
     expect(bf != -1, "");
@@ -299,9 +301,9 @@ void Triangle::local_dg_boundary_matrix(const Edge &edge,
   double integrals[Edge::n_vertices] = { 0.5 * edge_length,
                                          0.5 * edge_length };
 
-  for (int i = 0; i < dim_bound; ++i)
+  for (unsigned int i = 0; i < dim_bound; ++i)
   {
-    for (int j = 0; j < dim_bound; ++j)
+    for (unsigned int j = 0; j < dim_bound; ++j)
     {
       // B1
       loc_mat[i][j] -= coef_a * dot_product(normal, grad_bf[j]) * integrals[i];
@@ -313,8 +315,8 @@ void Triangle::local_dg_boundary_matrix(const Edge &edge,
   // B3
   double mat[][Edge::n_vertices] = { { 2, 1 },
                                      { 1, 2 } };
-  for (int i = 0; i < dim_bound; ++i)
-    for (int j = 0; j < dim_bound; ++j)
+  for (unsigned int i = 0; i < dim_bound; ++i)
+    for (unsigned int j = 0; j < dim_bound; ++j)
       loc_mat[i][j] += coef_a * gamma * mat[i][j] / 6.0;
 }
 
@@ -328,8 +330,8 @@ void Triangle::local_dg_interior_matrix(const Triangle &tri,
                                         double **loc_mat) const
 {
   const unsigned int dim = Edge::n_vertices;
-  for (int i = 0; i < 2 * dim; ++i)
-    for (int j = 0; j < 2 * dim; ++j)
+  for (unsigned int i = 0; i < 2 * dim; ++i)
+    for (unsigned int j = 0; j < 2 * dim; ++j)
       loc_mat[i][j] = 0.0; // zero initialization
 
   // plus means this triangle, edge in this triangle, coefficient, etc
@@ -363,27 +365,27 @@ void Triangle::local_dg_interior_matrix(const Triangle &tri,
   // so we need to find out what is its number
   Point grad_bf_plus[dim];
   Point grad_bf_minus[dim];
-  for (int v = 0; v < Edge::n_vertices; ++v)
+  for (unsigned int v = 0; v < Edge::n_vertices; ++v)
   {
     // "plus"
     int bf = -1;
-    for (int i = 0; i < n_dofs_first && bf == -1; ++i)
+    for (unsigned int i = 0; i < n_dofs_first && bf == -1; ++i)
       if (this->_dofs[i] == edges[0].vertex(v))
         bf = i;
     expect(bf != -1, "");
     grad_bf_plus[v] = this->gradient_basis_function(bf); // calculate the gradient of that basis function
     // "minus"
     bf = -1;
-    for (int i = 0; i < n_dofs_first && bf == -1; ++i)
+    for (unsigned int i = 0; i < n_dofs_first && bf == -1; ++i)
       if (tri.dof(i) == edges[1].vertex(v))
         bf = i;
     expect(bf != -1, "");
     grad_bf_minus[v] = tri.gradient_basis_function(bf); // calculate the gradient of that basis function
   }
 
-  for (int i = 0; i < dim; ++i)
+  for (unsigned int i = 0; i < dim; ++i)
   {
-    for (int j = 0; j < dim; ++j)
+    for (unsigned int j = 0; j < dim; ++j)
     {
       // B1
       B_plus_plus[i][j]   = -0.5 * coefs[0] * dot_product(normal_plus,  grad_bf_plus[j])  * integrals_plus[i];
@@ -402,9 +404,9 @@ void Triangle::local_dg_interior_matrix(const Triangle &tri,
   const double coef = 0.5 * (coefs[0] + coefs[1]); // average value
   double mat[][dim] = { { 2, 1 },
                         { 1, 2 } };
-  for (int i = 0; i < dim; ++i)
+  for (unsigned int i = 0; i < dim; ++i)
   {
-    for (int j = 0; j < dim; ++j)
+    for (unsigned int j = 0; j < dim; ++j)
     {
       B_plus_plus[i][j]   += coef * gamma * mat[i][j] / 6.0;
       B_plus_minus[i][j]  -= coef * gamma * mat[i][j] / 6.0;
@@ -414,9 +416,9 @@ void Triangle::local_dg_interior_matrix(const Triangle &tri,
   }
 
   // assmebling local matrix
-  for (int i = 0; i < dim; ++i)
+  for (unsigned int i = 0; i < dim; ++i)
   {
-    for (int j = 0; j < dim; ++j)
+    for (unsigned int j = 0; j < dim; ++j)
     {
       loc_mat[i][j]         = B_plus_plus[i][j];
       loc_mat[i][j + 2]     = B_plus_minus[i][j];
@@ -439,7 +441,7 @@ const Point Triangle::gradient_basis_function(unsigned int num_bf) const
 
 bool Triangle::contains_dof(unsigned int num) const
 {
-  for (int i = 0; i < _dofs.size(); ++i)
+  for (unsigned int i = 0; i < _dofs.size(); ++i)
     if (_dofs[i] == num)
       return true;
   return false;

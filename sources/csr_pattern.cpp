@@ -60,15 +60,15 @@ void CSRPattern::make_cg_sparse_format(const DoFHandler &dof_handler)
 
   // pass through all triangles and all dofs on them
   expect(dof_handler.fmesh().n_triangles() != 0, "");
-  for (int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
+  for (unsigned int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
   {
     Triangle triangle = dof_handler.fmesh().triangle(cell);
 
     expect(triangle.n_dofs() != 0, "");
-    for (int di = 0; di < triangle.n_dofs(); ++di)
+    for (unsigned int di = 0; di < triangle.n_dofs(); ++di)
     {
       const unsigned int dof_i = triangle.dof(di); // the number of the first degree of freedom
-      for (int dj = 0; dj < triangle.n_dofs(); ++dj)
+      for (unsigned int dj = 0; dj < triangle.n_dofs(); ++dj)
       {
         const unsigned int dof_j = triangle.dof(dj); // the number of the second degree of freedom
         // insert the values in the corresponding places
@@ -82,7 +82,7 @@ void CSRPattern::make_cg_sparse_format(const DoFHandler &dof_handler)
   pattern_initialization(connect);
 
   // free the memory
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     connect[i].clear();
   delete[] connect;
 }
@@ -103,15 +103,15 @@ void CSRPattern::make_dg_sparse_format(const DoFHandler &dof_handler)
 
   // pass through all triangles and all dofs on them
   expect(dof_handler.fmesh().n_triangles() != 0, "");
-  for (int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
+  for (unsigned int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
   {
     Triangle triangle = dof_handler.fmesh().triangle(cell);
 
     expect(triangle.n_dofs() != 0, "");
-    for (int di = 0; di < triangle.n_dofs(); ++di)
+    for (unsigned int di = 0; di < triangle.n_dofs(); ++di)
     {
       const unsigned int dof_i = triangle.dof(di); // the number of the first degree of freedom
-      for (int dj = 0; dj < triangle.n_dofs(); ++dj)
+      for (unsigned int dj = 0; dj < triangle.n_dofs(); ++dj)
       {
         const unsigned int dof_j = triangle.dof(dj); // the number of the second degree of freedom
         // insert the values in the corresponding places
@@ -122,7 +122,7 @@ void CSRPattern::make_dg_sparse_format(const DoFHandler &dof_handler)
   }
 
   // pass through all interior CG edges
-  for (int e = 0; e < dof_handler.n_con_edges(); ++e)
+  for (unsigned int e = 0; e < dof_handler.n_con_edges(); ++e)
   {
     const Edge edge = dof_handler.con_edge(e); // CG edge
     if (edge.n_assoc_edges() == 2) // for interior edges only
@@ -150,7 +150,7 @@ void CSRPattern::make_dg_sparse_format(const DoFHandler &dof_handler)
   pattern_initialization(connect);
 
   // free the memory
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     connect[i].clear();
   delete[] connect;
 }
@@ -167,7 +167,7 @@ void CSRPattern::make_sparse_format(const std::vector<Rectangle> &rectangles, un
   std::set<unsigned int> *connect = new std::set<unsigned int>[_order];
 
   // pass through all rectangles and all dofs on them
-  for (int cell = 0; cell < rectangles.size(); ++cell)
+  for (unsigned int cell = 0; cell < rectangles.size(); ++cell)
   {
     const Rectangle rect = rectangles[cell];
 
@@ -182,7 +182,7 @@ void CSRPattern::make_sparse_format(const std::vector<Rectangle> &rectangles, un
     else
       require(false, "");
 
-    for (int ii = 0; ii < N; ++ii)
+    for (unsigned int ii = 0; ii < N; ++ii)
     {
       unsigned int num_i = -1;
       if (connectivity == VERTICES)
@@ -192,7 +192,7 @@ void CSRPattern::make_sparse_format(const std::vector<Rectangle> &rectangles, un
       else
         require(false, "");
 
-      for (int jj = 0; jj < N; ++jj)
+      for (unsigned int jj = 0; jj < N; ++jj)
       {
         unsigned int num_j = -1;
         if (connectivity == VERTICES)
@@ -213,7 +213,7 @@ void CSRPattern::make_sparse_format(const std::vector<Rectangle> &rectangles, un
   pattern_initialization(connect);
 
   // free the memory
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     connect[i].clear();
   delete[] connect;
 }
@@ -228,12 +228,12 @@ void CSRPattern::pattern_initialization(const std::set<unsigned int> *connect)
 
   _row.resize(_order + 1);
   _row[0] = 0;
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     _row[i + 1] = _row[i] + connect[i].size();
 
   _col.resize(_row[_order]);
   int k = 0;
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
   {
     for (std::set<unsigned int>::const_iterator iter = connect[i].begin();
          iter != connect[i].end();
@@ -249,12 +249,11 @@ void CSRPattern::pattern_initialization(const std::set<unsigned int> *connect)
 
 int CSRPattern::find(unsigned int num_row, unsigned num_col) const
 {
-  for (int i = _row[num_row]; i < _row[num_row + 1]; ++i)
+  for (unsigned int i = _row[num_row]; i < _row[num_row + 1]; ++i)
     if (num_col == _col[i])
       return i;
 
-  //require(false, "The serial number of nonzero element cannot be found");
-  //return 0; // to calm down a compiler
+  // if we found nothing
   return -1;
 }
 
@@ -286,7 +285,7 @@ unsigned int CSRPattern::col(unsigned int number) const
 const int* CSRPattern::nnz() const
 {
   int *nnz = new int[_order];
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     nnz[i] = _row[i + 1] - _row[i];
   return nnz;
 }

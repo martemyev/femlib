@@ -62,13 +62,13 @@ public:
              * Get the number of mesh triangles
              */
   unsigned int n_triangles() const;
-  void n_triangles(unsigned int amount);
+  void n_triangles(unsigned int number);
 
             /**
              * Get the mesh triangle (its copy)
              * @param number - the serial number of the mesh triangle
              */
-  Triangle triangle(int number) const;
+  Triangle triangle(unsigned number) const;
   void triangle(unsigned int number, const Triangle &tri);
 
             /**

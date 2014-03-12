@@ -5,7 +5,7 @@
 
 Point::Point()
 {
-  for (int i = 0; i < n_coord; ++i)
+  for (unsigned i = 0; i < n_coord; ++i)
     _coord[i] = 0.;
 }
 
@@ -13,7 +13,7 @@ Point::Point()
 
 Point::Point(const double coordinates[])
 {
-  for (int i = 0; i < n_coord; ++i)
+  for (unsigned i = 0; i < n_coord; ++i)
     _coord[i] = coordinates[i];
 }
 
@@ -32,7 +32,7 @@ Point::Point(const double x_coord,
 
 Point::Point(const Point &p)
 {
-  for (int i = 0; i < n_coord; ++i)
+  for (unsigned i = 0; i < n_coord; ++i)
     _coord[i] = p._coord[i];
 }
 
@@ -40,7 +40,7 @@ Point::Point(const Point &p)
 
 Point& Point::operator =(const Point &p)
 {
-  for (int i = 0; i < n_coord; ++i)
+  for (unsigned i = 0; i < n_coord; ++i)
     _coord[i] = p._coord[i];
   return *this;
 }
@@ -73,7 +73,7 @@ void Point::coord(unsigned int number, double value)
 
 Point& Point::operator /=(double d)
 {
-  for (int i = 0; i < n_coord; ++i)
+  for (unsigned i = 0; i < n_coord; ++i)
     _coord[i] /= d;
   return *this;
 }
@@ -83,7 +83,7 @@ Point& Point::operator /=(double d)
 Point operator -(const Point &p1, const Point &p2)
 {
   Point res;
-  for (int i = 0; i < Point::n_coord; ++i)
+  for (unsigned i = 0; i < Point::n_coord; ++i)
     res._coord[i] = p1._coord[i] - p2._coord[i];
   return res;
 }

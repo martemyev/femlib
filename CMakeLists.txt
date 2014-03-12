@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 # --- project ---
 #set(CMAKE_CXX_COMPILER mpicxx)
 project(fem)
-add_definitions(-std=c++0x -Wall)
+set(MY_CXX_FLAGS "-std=c++0x -Wall")
 # ---------------
 
 
@@ -14,10 +14,12 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
   set(DEBUG ON CACHE BOOL "This option is for internal usage - not the compiler debug options" FORCE)
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MY_CXX_FLAGS}")
   message("build type: Debug")
   message("compiler flags: ${CMAKE_CXX_FLAGS_DEBUG}")
 elseif(CMAKE_BUILD_TYPE MATCHES Release)
   set(DEBUG OFF CACHE BOOL "This option is for internal usage - not the compiler debug options" FORCE)
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${MY_CXX_FLAGS}")
   message("build type: Release")
   message("compiler flags: ${CMAKE_CXX_FLAGS_RELEASE}")
 else(CMAKE_BUILD_TYPE MATCHES Debug)

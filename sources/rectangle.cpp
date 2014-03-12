@@ -82,8 +82,8 @@ void Rectangle::local_stiffness_matrix(const double coef_beta, double **loc_mat)
                                            { m13, m14, m11, m12 },
                                            { m14, m13, m12, m11 }
                                          };
-      for (int i = 0; i < n_dofs_first; ++i)
-        for (int j = 0; j < n_dofs_first; ++j)
+      for (unsigned int i = 0; i < n_dofs_first; ++i)
+        for (unsigned int j = 0; j < n_dofs_first; ++j)
           loc_mat[i][j] = coef_beta * mat[i][j] / 3.;
       return;
     }
@@ -107,8 +107,8 @@ void Rectangle::local_mass_matrix(const double coef_alpha, double **loc_mat) con
                                            { 2, 1, 4, 2 },
                                            { 1, 2, 2, 4 }
                                          };
-      for (int i = 0; i < n_dofs_first; ++i)
-        for (int j = 0; j < n_dofs_first; ++j)
+      for (unsigned int i = 0; i < n_dofs_first; ++i)
+        for (unsigned int j = 0; j < n_dofs_first; ++j)
           loc_mat[i][j] = coef_alpha * hx * hy * mat[i][j] / 36.;
       return;
     }
@@ -135,10 +135,10 @@ void Rectangle::local_rhs_vector(const Function &func,
                                            { 2, 1, 4, 2 },
                                            { 1, 2, 2, 4 }
                                          };
-      for (int i = 0; i < n_dofs_first; ++i)
+      for (unsigned int i = 0; i < n_dofs_first; ++i)
       {
         loc_vec[i] = 0;
-        for (int j = 0; j < n_dofs_first; ++j)
+        for (unsigned int j = 0; j < n_dofs_first; ++j)
           loc_vec[i] += hx * hy * mat[i][j] * func.value(points[_dofs[j]], time) / 36.;
       }
       return;

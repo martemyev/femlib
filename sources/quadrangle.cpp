@@ -6,7 +6,7 @@
 Quadrangle::Quadrangle()
   : MeshElement(n_vertices, n_edges, n_faces, gmsh_el_type)
 {
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
     _X[i] = _Y[i] = 0.;
 }
 
@@ -39,7 +39,7 @@ Quadrangle::Quadrangle(const std::vector<unsigned int> &ver,
 
   if (!mesh_vertices.empty())
   {
-    for (int i = 0; i < n_vertices; ++i)
+    for (unsigned int i = 0; i < n_vertices; ++i)
     {
       expect(_vertices[i] < mesh_vertices.size(), ""); // we can check this way, since the vertices in mesh_vertices vector have dense numeration from 0
       _X[i] = mesh_vertices[_vertices[i]].coord(0);
@@ -71,7 +71,7 @@ Quadrangle::Quadrangle(const unsigned int v1,
 
   if (!mesh_vertices.empty())
   {
-    for (int i = 0; i < n_vertices; ++i)
+    for (unsigned int i = 0; i < n_vertices; ++i)
     {
       expect(_vertices[i] < mesh_vertices.size(), ""); // we can check this way, since the vertices in mesh_vertices vector have dense numeration from 0
       _X[i] = mesh_vertices[_vertices[i]].coord(0);
@@ -88,7 +88,7 @@ Quadrangle::Quadrangle(const Quadrangle &quad)
     //_dofs(tri._dofs),
     //_detD(tri._detD)
 {
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
   {
     _X[i] = quad._X[i];
     _Y[i] = quad._Y[i];
@@ -104,10 +104,12 @@ Quadrangle& Quadrangle::operator =(const Quadrangle &quad)
   //_ghost_cells = tri._ghost_cells;
   //_dofs = tri._dofs;
   //_detD = tri._detD;
-  for (int i = 0; i < n_vertices; ++i)
+  for (unsigned int i = 0; i < n_vertices; ++i)
   {
     _X[i] = quad._X[i];
     _Y[i] = quad._Y[i];
   }
   //_dis_edges = tri._dis_edges;
+
+  return *this;
 }

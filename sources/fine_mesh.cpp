@@ -158,7 +158,7 @@ void FineMesh::read(const std::string &file,
 
       else // ASCII format
       {
-        for (int el = 0; el < n_elements; ++el)
+        for (unsigned el = 0; el < n_elements; ++el)
         {
           in >> number >> el_type >> n_tags;
           std::vector<int> data(n_tags); // allocate the memory for some data
@@ -180,7 +180,7 @@ void FineMesh::read(const std::string &file,
             if (n_partitions > 1) // if the element is on the boundary between the partitions, it is described by "ghost cells" as well
             {
               ghost_cells.resize(n_partitions - 1);
-              for (int gc = 0; gc < n_partitions - 1; ++gc)
+              for (unsigned gc = 0; gc < n_partitions - 1; ++gc)
               {
                 ghost_cells[gc] = -data[4 + gc]; // 'minus' since ghost cells are described by number of partition with the negative sing
                 expect(ghost_cells[gc] > 0, "The number of the ghost cell (positive one) is unexpected (" + d2s(ghost_cells[gc]) + ")");
@@ -261,7 +261,7 @@ void FineMesh::read(const std::string &file,
       //       "There are no boundary lines in the mesh!");
 
       // check that the numbers of partitions are sequential
-      for (int par = 0; par < _partitions.size(); ++par)
+      for (unsigned par = 0; par < _partitions.size(); ++par)
         require(*_partitions.find(par) == par, "The numeration of the partitions is not dense");
 
 
@@ -297,7 +297,7 @@ void FineMesh::boundary_vertices_initialization(const Point &declared_min_point,
             d2s(_max_coord.coord(0)) + ", " + d2s(_max_coord.coord(1)) + ")");
 
     // find nodes that lie on the boundary of the computational domain
-    for (int i = 0; i < _vertices.size(); ++i)
+    for (unsigned i = 0; i < _vertices.size(); ++i)
     {
       const double x = _vertices[i].coord(0);
       const double y = _vertices[i].coord(1);
@@ -311,9 +311,9 @@ void FineMesh::boundary_vertices_initialization(const Point &declared_min_point,
   }
   else // there are the boundary lines in the mesh
   {
-    for (int lin = 0; lin < _lines.size(); ++lin)
+    for (unsigned lin = 0; lin < _lines.size(); ++lin)
     {
-      for (int ver = 0; ver < Line::n_vertices; ++ver)
+      for (unsigned ver = 0; ver < Line::n_vertices; ++ver)
       {
         const int node = _lines[lin].vertex(ver);
         if (find(_boundary_vertices.begin(), _boundary_vertices.end(), node) == _boundary_vertices.end())
@@ -370,17 +370,17 @@ unsigned int FineMesh::n_triangles() const
 
 
 
-void FineMesh::n_triangles(unsigned int amount)
+void FineMesh::n_triangles(unsigned int number)
 {
   expect(_triangles.empty(), "The list of triangles is not empty. What are you doing?");
-  _triangles.resize(amount); // allocate the memory for the vector
+  _triangles.resize(number); // allocate the memory for the vector
 }
 
 
 
-Triangle FineMesh::triangle(int number) const
+Triangle FineMesh::triangle(unsigned number) const
 {
-  expect(number >= 0 && number < _triangles.size(),
+  expect(number < _triangles.size(),
          "Incorrect number of a triangle (" + d2s(number) +
          "). It should be in a range [0, " + d2s(_triangles.size()) + ")");
   return _triangles[number];
@@ -519,10 +519,10 @@ void FineMesh::create_rectangular_grid(double X_BEG, double X_END,
   _rectangles.resize(n_rectangles); // allocate the memory for all rectangles
 
   unsigned int ver = 0; // number of a current vertex
-  for (int i = 0; i < N_FINE_Y + 1; ++i)
+  for (unsigned i = 0; i < N_FINE_Y + 1; ++i)
   {
     const double y = (i == N_FINE_Y ? Y_END : Y_BEG + i * hy);
-    for (int j = 0; j < N_FINE_X + 1; ++j)
+    for (unsigned j = 0; j < N_FINE_X + 1; ++j)
     {
       const double x = (j == N_FINE_X ? X_END : X_BEG + j * hx);
       _vertices[ver] = Point(x, y, 0);
@@ -532,9 +532,9 @@ void FineMesh::create_rectangular_grid(double X_BEG, double X_END,
 
   unsigned int rect = 0; // number of a current rectangle
   std::vector<unsigned int> vert(Rectangle::n_vertices); // the numbers of vertices describing a rectangle
-  for (int i = 0; i < N_FINE_Y; ++i)
+  for (unsigned i = 0; i < N_FINE_Y; ++i)
   {
-    for (int j = 0; j < N_FINE_X; ++j)
+    for (unsigned j = 0; j < N_FINE_X; ++j)
     {
       // numeration of rectangle's vertices is the following
       // 2 --- 3

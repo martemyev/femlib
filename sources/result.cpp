@@ -60,22 +60,22 @@ void Result::write_vtu(const std::string &filename,
   out << "    <Piece NumberOfPoints=\"" << dofs.size() << "\" NumberOfCells=\"" << fmesh.n_triangles() << "\">\n";
   out << "      <PointData>\n";
   out << "        <DataArray type=\"Float64\" Name=\"solution\" format=\"ascii\">\n";
-  for (int i = 0; i < dofs.size(); ++i)
+  for (unsigned int i = 0; i < dofs.size(); ++i)
     out << solution_values[i] << "\n";
   out << "        </DataArray>\n";
   if (exact_solution)
   {
     out << "        <DataArray type=\"Float64\" Name=\"exact_solution\" format=\"ascii\">\n";
-    for (int i = 0; i < dofs.size(); ++i)
+    for (unsigned int i = 0; i < dofs.size(); ++i)
       out << exact_solution_values[i] << "\n";
     out << "        </DataArray>\n";
   }
   out << "      </PointData>\n";
   out << "      <Points>\n";
   out << "        <DataArray type=\"Float64\" NumberOfComponents=\"" << Point::n_coord << "\" format=\"ascii\">\n";
-  for (int i = 0; i < dofs.size(); ++i)
+  for (unsigned int i = 0; i < dofs.size(); ++i)
   {
-    for (int j = 0; j < Point::n_coord; ++j)
+    for (unsigned int j = 0; j < Point::n_coord; ++j)
       out << dofs[i].coord(j) << " ";
     out << "\n";
   }
@@ -83,21 +83,21 @@ void Result::write_vtu(const std::string &filename,
   out << "      </Points>\n";
   out << "      <Cells>\n";
   out << "        <DataArray type=\"Int32\" Name=\"connectivity\" format=\"ascii\">\n";
-  for (int tr = 0; tr < fmesh.n_triangles(); ++tr)
+  for (unsigned int tr = 0; tr < fmesh.n_triangles(); ++tr)
   {
     const Triangle triangle = fmesh.triangle(tr);
-    for (int d = 0; d < Triangle::n_dofs_first; ++d)
+    for (unsigned int d = 0; d < Triangle::n_dofs_first; ++d)
       out << triangle.dof(d) << " ";
     out << "\n";
   }
   out << "        </DataArray>\n";
   out << "        <DataArray type=\"Int32\" Name=\"offsets\" format=\"ascii\">\n";
-  for (int tr = 0; tr < fmesh.n_triangles(); ++tr)
+  for (unsigned int tr = 0; tr < fmesh.n_triangles(); ++tr)
     out << (tr + 1) * Triangle::n_dofs_first << " ";
   out << "\n";
   out << "        </DataArray>\n";
   out << "        <DataArray type=\"Int32\" Name=\"types\" format=\"ascii\">\n";
-  for (int tr = 0; tr < fmesh.n_triangles(); ++tr)
+  for (unsigned int tr = 0; tr < fmesh.n_triangles(); ++tr)
     out << Triangle::vtk_el_type << " ";
   out << "\n";
   out << "        </DataArray>\n";
@@ -156,13 +156,13 @@ void Result::write_vts(const std::string &filename,
   out << "    <Piece Extent=\"1 " << N_FINE_X + 1 << " 1 " << N_FINE_Y + 1 << " 1 1\">\n";
   out << "      <PointData Scalars=\"scalars\">\n";
   out << "        <DataArray type=\"Float64\" Name=\"U_solution\" format=\"ascii\">\n";
-  for (int i = 0; i < dofs.size(); ++i)
+  for (unsigned int i = 0; i < dofs.size(); ++i)
     out << solution_values[i] << "\n";
   out << "        </DataArray>\n";
   if (exact_solution)
   {
     out << "        <DataArray type=\"Float64\" Name=\"U_exact\" format=\"ascii\">\n";
-    for (int i = 0; i < dofs.size(); ++i)
+    for (unsigned int i = 0; i < dofs.size(); ++i)
       out << exact_solution_values[i] << "\n";
     out << "        </DataArray>\n";
   }
@@ -174,7 +174,7 @@ void Result::write_vts(const std::string &filename,
     {
       out << "        <DataArray type=\"Float64\" Name=\"coef_alpha\" format=\"ascii\">\n";
       expect(coef_alpha.size() == N_FINE_X * N_FINE_Y, "dimensions mismatch. look at the code");
-      for (int i = 0; i < coef_alpha.size(); ++i)
+      for (unsigned int i = 0; i < coef_alpha.size(); ++i)
         out << coef_alpha[i] << "\n";
       out << "        </DataArray>\n";
     }
@@ -182,7 +182,7 @@ void Result::write_vts(const std::string &filename,
     {
       out << "        <DataArray type=\"Float64\" Name=\"coef_beta\" format=\"ascii\">\n";
       expect(coef_beta.size() == N_FINE_X * N_FINE_Y, "dimensions mismatch. look at the code");
-      for (int i = 0; i < coef_beta.size(); ++i)
+      for (unsigned int i = 0; i < coef_beta.size(); ++i)
         out << coef_beta[i] << "\n";
       out << "        </DataArray>\n";
     }
@@ -190,7 +190,7 @@ void Result::write_vts(const std::string &filename,
   }
   out << "      <Points>\n";
   out << "        <DataArray type=\"Float64\" NumberOfComponents=\"3\" format=\"ascii\">\n";
-  for (int i = 0; i < fmesh.n_vertices(); ++i)
+  for (unsigned int i = 0; i < fmesh.n_vertices(); ++i)
   {
     const Point vert = fmesh.vertex(i);
     out << vert.coord(0) << " " << vert.coord(1) << " " << vert.coord(2) << " ";

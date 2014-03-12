@@ -26,15 +26,15 @@ void SymCSRPattern::make_sparse_format(const DoFHandler &dof_handler)
 
   // pass through all triangles and all dofs on them
   expect(dof_handler.fmesh().n_triangles() != 0, "");
-  for (int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
+  for (unsigned int cell = 0; cell < dof_handler.fmesh().n_triangles(); ++cell)
   {
     Triangle triangle = dof_handler.fmesh().triangle(cell);
 
     expect(triangle.n_dofs() != 0, "");
-    for (int di = 0; di < triangle.n_dofs(); ++di)
+    for (unsigned int di = 0; di < triangle.n_dofs(); ++di)
     {
       const unsigned int dof_i = triangle.dof(di); // the number of the first degree of freedom
-      for (int dj = 0; dj < triangle.n_dofs(); ++dj)
+      for (unsigned int dj = 0; dj < triangle.n_dofs(); ++dj)
       {
         const unsigned int dof_j = triangle.dof(dj); // the number of the second degree of freedom
 
@@ -50,7 +50,7 @@ void SymCSRPattern::make_sparse_format(const DoFHandler &dof_handler)
   pattern_initialization(connect);
 
   // free the memory
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     connect[i].clear();
   delete[] connect;
 }
@@ -68,14 +68,14 @@ void SymCSRPattern::make_sparse_format(const FineMesh &fmesh)
 
   // pass through all triangles and all vertices on them
   expect(fmesh.n_triangles() != 0, "");
-  for (int cell = 0; cell < fmesh.n_triangles(); ++cell)
+  for (unsigned int cell = 0; cell < fmesh.n_triangles(); ++cell)
   {
     Triangle triangle = fmesh.triangle(cell);
 
-    for (int di = 0; di < Triangle::n_vertices; ++di)
+    for (unsigned int di = 0; di < Triangle::n_vertices; ++di)
     {
       const unsigned int ver_i = triangle.vertex(di); // the number of the first vertex
-      for (int dj = 0; dj < Triangle::n_vertices; ++dj)
+      for (unsigned int dj = 0; dj < Triangle::n_vertices; ++dj)
       {
         const unsigned int ver_j = triangle.vertex(dj); // the number of the second vertex
 
@@ -91,7 +91,7 @@ void SymCSRPattern::make_sparse_format(const FineMesh &fmesh)
   pattern_initialization(connect);
 
   // free the memory
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     connect[i].clear();
   delete[] connect;
 }
@@ -108,7 +108,7 @@ void SymCSRPattern::make_sparse_format(const std::vector<Triangle> &triangles, u
   std::set<unsigned int> *connect = new std::set<unsigned int>[_order];
 
   // pass through all triangles and all dofs on them
-  for (int cell = 0; cell < triangles.size(); ++cell)
+  for (unsigned int cell = 0; cell < triangles.size(); ++cell)
   {
     const Triangle tri = triangles[cell];
 
@@ -123,7 +123,7 @@ void SymCSRPattern::make_sparse_format(const std::vector<Triangle> &triangles, u
     else
       require(false, "");
 
-    for (int ii = 0; ii < N; ++ii)
+    for (unsigned int ii = 0; ii < N; ++ii)
     {
       unsigned int num_i = -1;
       if (connectivity == VERTICES)
@@ -133,7 +133,7 @@ void SymCSRPattern::make_sparse_format(const std::vector<Triangle> &triangles, u
       else
         require(false, "");
 
-      for (int jj = 0; jj < N; ++jj)
+      for (unsigned int jj = 0; jj < N; ++jj)
       {
         unsigned int num_j = -1;
         if (connectivity == VERTICES)
@@ -155,7 +155,7 @@ void SymCSRPattern::make_sparse_format(const std::vector<Triangle> &triangles, u
   pattern_initialization(connect);
 
   // free the memory
-  for (int i = 0; i < _order; ++i)
+  for (unsigned int i = 0; i < _order; ++i)
     connect[i].clear();
   delete[] connect;
 }

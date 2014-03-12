@@ -41,7 +41,13 @@ public:
   void make_sparse_format(const std::vector<Rectangle> &rectangles, unsigned int order, CONNECTIVITY connectivity);
 
             /**
-             * Get the serial number of nonzero element in the pattern
+             * Get the serial number of nonzero element in the pattern.
+             * To find it effectively we need to know the number of the row,
+             * where the element is.
+             * If there if no such element in the given row,
+             * the function returns "-1", which means that this element wasn't found.
+             * "-1" should be correctly treated (ignored or exception should be thrown)
+             * in user's function - not here.
              * @param num_row - the number of the row
              * @param num_col - the number of the col
              */

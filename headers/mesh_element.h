@@ -148,6 +148,13 @@ protected:
   std::vector<unsigned int> _faces;
 
             /**
+             * Type of the element (its number actually) like in Gmsh.
+             * It must be defined in every derived class.
+             * It's 0 by default.
+             */
+  unsigned int _gmsh_el_type;
+
+            /**
              * ID of the physical domain where the element takes place.
              * It's necessary to distinguish media with different physical properties.
              */
@@ -158,13 +165,6 @@ protected:
              * which can be considered as a coarse element
              */
   unsigned int _partition_id;
-
-            /**
-             * Type of the element (its number actually) like in Gmsh.
-             * It must be defined in every derived class.
-             * It's 0 by default.
-             */
-  unsigned int _gmsh_el_type;
 
             /**
              * Constructor is protected to prevent creating MeshElement objects directly

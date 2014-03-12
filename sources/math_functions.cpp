@@ -20,7 +20,7 @@ double rel_error(const Vec &vec1, const Vec &vec2)
 double dot_product(const Point &p1, const Point &p2)
 {
   double dp = 0.;
-  for (int i = 0; i < Point::n_coord; ++i)
+  for (unsigned int i = 0; i < Point::n_coord; ++i)
     dp += p1.coord(i) * p2.coord(i);
   return dp;
 }
