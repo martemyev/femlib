@@ -119,11 +119,11 @@ const Point Edge::normal(const Triangle &tri, const std::vector<Point> &points) 
 
   Point normal = Point(AB.coord(1), -AB.coord(0), 0); // normal vector has coordinates (AB.y, -AB.x);
   // check the direction of the normal
-  if (dot_product(normal, AC) > 0) // if normal vector and AC have the same direction, then normal is oriented into triangle
+  if (math::dot_product(normal, AC) > 0) // if normal vector and AC have the same direction, then normal is oriented into triangle
     normal = Point(-AB.coord(1), AB.coord(0), 0); // in this case we just change the direction on outward
 
   // normalize the outward normal vector
-  normalize(normal);
+  math::normalize(normal);
 
   return normal;
 }

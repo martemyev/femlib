@@ -7,6 +7,8 @@
 
 NAMESPACE_FEM_OPEN
 
+namespace math {
+
 
 
 const double FLOAT_NUMBERS_EQUALITY_TOLERANCE = 1e-14;
@@ -44,6 +46,7 @@ void normalize(Point &vec);
 double norm(const Point &vec);
 
 
+} // namespace math
 
 NAMESPACE_FEM_CLOSE
 

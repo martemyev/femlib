@@ -3,6 +3,8 @@
 
 NAMESPACE_FEM_OPEN
 
+namespace math {
+
 
 
 double rel_error(const Vec &vec1, const Vec &vec2)
@@ -44,5 +46,7 @@ double norm(const Point &vec)
   return sqrt(dot_product(vec, vec));
 }
 
+
+} // namespace math
 
 NAMESPACE_FEM_CLOSE

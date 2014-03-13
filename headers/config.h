@@ -4,7 +4,7 @@
 #include <string>
 
 // options defined in cmake
-#define DEBUG
+/* #undef DEBUG */
 /* #undef HAVE_64BIT_SIZE_T */
 
 // the following two definitions are used

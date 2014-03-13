@@ -284,10 +284,10 @@ void FineMesh::boundary_vertices_initialization(const Point &declared_min_point,
 {
   if (_lines.size() == 0) // there are no boundary lines in the mesh
   {
-    require(norm(declared_max_point - declared_min_point) > FLOAT_NUMBERS_EQUALITY_TOLERANCE,
+    require(math::norm(declared_max_point - declared_min_point) > math::FLOAT_NUMBERS_EQUALITY_TOLERANCE,
             "There are no boundary lines in the mesh, and boundaries seem not to be defined through min and max points");
     // in this case the domain should be rectangular.
-    const double tol = FLOAT_NUMBERS_EQUALITY_TOLERANCE;
+    const double tol = math::FLOAT_NUMBERS_EQUALITY_TOLERANCE;
     require(fabs(_min_coord.coord(0) - declared_min_point.coord(0)) < tol &&
             fabs(_min_coord.coord(1) - declared_min_point.coord(1)) < tol &&
             fabs(_max_coord.coord(0) - declared_max_point.coord(0)) < tol &&

@@ -309,9 +309,9 @@ void Triangle::local_dg_boundary_matrix(const Edge &edge,
     for (unsigned int j = 0; j < dim_bound; ++j)
     {
       // B1
-      loc_mat[i][j] -= coef_a * dot_product(normal, grad_bf[j]) * integrals[i];
+      loc_mat[i][j] -= coef_a * math::dot_product(normal, grad_bf[j]) * integrals[i];
       // B2
-      loc_mat[i][j] -= coef_a * dot_product(normal, grad_bf[i]) * integrals[j];
+      loc_mat[i][j] -= coef_a * math::dot_product(normal, grad_bf[i]) * integrals[j];
     }
   }
 
@@ -350,7 +350,7 @@ void Triangle::local_dg_interior_matrix(const Triangle &tri,
   const Point normal_plus  = edges[0].normal(*this, dof_handler.dofs());
   const Point normal_minus = edges[1].normal(tri, dof_handler.dofs());
 
-  expect(fabs(dot_product(normal_plus, normal_minus) + 1.0) < 1e-14,
+  expect(fabs(math::dot_product(normal_plus, normal_minus) + 1.0) < 1e-14,
          "Dot product of normal_plus and normal_minus is not equal to -1");
 
   // integrals of any single basis function over an edge are always
@@ -391,15 +391,15 @@ void Triangle::local_dg_interior_matrix(const Triangle &tri,
     for (unsigned int j = 0; j < dim; ++j)
     {
       // B1
-      B_plus_plus[i][j]   = -0.5 * coefs[0] * dot_product(normal_plus,  grad_bf_plus[j])  * integrals_plus[i];
-      B_plus_minus[i][j]  = -0.5 * coefs[1] * dot_product(normal_plus,  grad_bf_minus[j]) * integrals_plus[i];
-      B_minus_plus[i][j]  = -0.5 * coefs[0] * dot_product(normal_minus, grad_bf_plus[j])  * integrals_minus[i];
-      B_minus_minus[i][j] = -0.5 * coefs[1] * dot_product(normal_minus, grad_bf_minus[j]) * integrals_minus[i];
+      B_plus_plus[i][j]   = -0.5 * coefs[0] * math::dot_product(normal_plus,  grad_bf_plus[j])  * integrals_plus[i];
+      B_plus_minus[i][j]  = -0.5 * coefs[1] * math::dot_product(normal_plus,  grad_bf_minus[j]) * integrals_plus[i];
+      B_minus_plus[i][j]  = -0.5 * coefs[0] * math::dot_product(normal_minus, grad_bf_plus[j])  * integrals_minus[i];
+      B_minus_minus[i][j] = -0.5 * coefs[1] * math::dot_product(normal_minus, grad_bf_minus[j]) * integrals_minus[i];
       // B2
-      B_plus_plus[i][j]   -= 0.5 * coefs[0] * dot_product(normal_plus,  grad_bf_plus[i])  * integrals_plus[j];
-      B_plus_minus[i][j]  -= 0.5 * coefs[0] * dot_product(normal_minus, grad_bf_plus[i])  * integrals_minus[j];
-      B_minus_plus[i][j]  -= 0.5 * coefs[1] * dot_product(normal_plus,  grad_bf_minus[i]) * integrals_plus[j];
-      B_minus_minus[i][j] -= 0.5 * coefs[1] * dot_product(normal_minus, grad_bf_minus[i]) * integrals_minus[j];
+      B_plus_plus[i][j]   -= 0.5 * coefs[0] * math::dot_product(normal_plus,  grad_bf_plus[i])  * integrals_plus[j];
+      B_plus_minus[i][j]  -= 0.5 * coefs[0] * math::dot_product(normal_minus, grad_bf_plus[i])  * integrals_minus[j];
+      B_minus_plus[i][j]  -= 0.5 * coefs[1] * math::dot_product(normal_plus,  grad_bf_minus[i]) * integrals_plus[j];
+      B_minus_minus[i][j] -= 0.5 * coefs[1] * math::dot_product(normal_minus, grad_bf_minus[i]) * integrals_minus[j];
     }
   }
 
