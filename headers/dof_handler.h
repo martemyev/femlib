@@ -1,10 +1,14 @@
 #ifndef DOF_HANDLER_H
 #define DOF_HANDLER_H
 
+#include "config.h"
 #include "point.h"
 #include "edge.h"
 //#include "sym_csr_pattern.h"
 #include <vector>
+
+
+NAMESPACE_FEM_OPEN
 
 
 class FineMesh;
@@ -151,5 +155,8 @@ void associated_dg_edges(unsigned int ver_i,
                          const SymCSRPattern &dof_pattern,
                          std::vector<unsigned int> &assoc_dg_edges);
 
+
+
+NAMESPACE_FEM_CLOSE
 
 #endif // DOF_HANDLER_H

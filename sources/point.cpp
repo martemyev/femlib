@@ -2,6 +2,9 @@
 #include "auxiliary_functions.h"
 #include <vector>
 
+NAMESPACE_FEM_OPEN
+
+
 
 Point::Point()
 {
@@ -87,3 +90,6 @@ Point operator -(const Point &p1, const Point &p2)
     res._coord[i] = p1._coord[i] - p2._coord[i];
   return res;
 }
+
+
+NAMESPACE_FEM_CLOSE

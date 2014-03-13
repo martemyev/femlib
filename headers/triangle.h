@@ -1,8 +1,12 @@
 #ifndef FEM_TRIANGLE_H
 #define FEM_TRIANGLE_H
 
+#include "config.h"
 #include "mesh_element.h"
 #include "point.h"
+
+NAMESPACE_FEM_OPEN
+
 
 
 class Edge;
@@ -287,5 +291,6 @@ private: //========================== PRIVATE ============================
 
 
 
+NAMESPACE_FEM_CLOSE
 
 #endif // FEM_TRIANGLE_H

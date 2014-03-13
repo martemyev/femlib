@@ -1,7 +1,11 @@
 #ifndef MESH_ELEMENT_H
 #define MESH_ELEMENT_H
 
+#include "config.h"
 #include <vector>
+
+NAMESPACE_FEM_OPEN
+
 
 
 /**
@@ -189,5 +193,7 @@ protected:
   MeshElement& operator =(const MeshElement &elem);
 };
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // MESH_ELEMENT_H

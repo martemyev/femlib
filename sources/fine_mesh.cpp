@@ -5,6 +5,9 @@
 #include <map>
 #include <algorithm>
 
+NAMESPACE_FEM_OPEN
+
+
 
 FineMesh::FineMesh()
 { }
@@ -563,3 +566,6 @@ Rectangle FineMesh::rectangle(unsigned int number) const
   expect(number < _rectangles.size(), "");
   return _rectangles[number];
 }
+
+
+NAMESPACE_FEM_CLOSE

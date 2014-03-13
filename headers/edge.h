@@ -1,8 +1,12 @@
 #ifndef EDGE_H
 #define EDGE_H
 
+#include "config.h"
 #include "line.h"
 #include <vector>
+
+NAMESPACE_FEM_OPEN
+
 
 class Point;
 class Triangle;
@@ -79,5 +83,7 @@ private:
   std::vector<unsigned int> _edges;
 };
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // EDGE_H

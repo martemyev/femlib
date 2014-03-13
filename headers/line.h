@@ -1,8 +1,13 @@
 #ifndef LINE_H
 #define LINE_H
 
+#include "config.h"
 #include <vector>
 #include "mesh_element.h"
+
+NAMESPACE_FEM_OPEN
+
+
 
 /**
  * Line keeps 3 numbers - the number of beginning vertex,
@@ -75,5 +80,7 @@ public:
   unsigned int another_vertex(const unsigned int vertex) const;
 };
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // LINE_H

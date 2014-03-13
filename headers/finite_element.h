@@ -1,6 +1,11 @@
 #ifndef FEM_FINITE_ELEMENT_H
 #define FEM_FINITE_ELEMENT_H
 
+#include "config.h"
+
+NAMESPACE_FEM_OPEN
+
+
 
 class FiniteElement
 {
@@ -19,5 +24,7 @@ private: // ======================== PRIVATE =======================
   FiniteElement& operator =(const FiniteElement &fe);
 };
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // FEM_FINITE_ELEMENT_H

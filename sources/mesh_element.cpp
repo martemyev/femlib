@@ -1,6 +1,9 @@
 #include "mesh_element.h"
 #include "auxiliary_functions.h"
 
+NAMESPACE_FEM_OPEN
+
+
 
 MeshElement::MeshElement(unsigned int n_ver,
                          unsigned int n_edg,
@@ -189,3 +192,5 @@ bool MeshElement::contains(const unsigned int vertex) const
   return false;
 }
 
+
+NAMESPACE_FEM_CLOSE

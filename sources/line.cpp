@@ -1,6 +1,9 @@
 #include "line.h"
 #include "auxiliary_functions.h"
 
+NAMESPACE_FEM_OPEN
+
+
 
 Line::Line()
   : MeshElement(n_vertices, n_edges, n_faces, gmsh_el_type)
@@ -59,3 +62,6 @@ unsigned int Line::another_vertex(const unsigned int vertex) const
     require(false, "This line doesn't contain the vertex. So we can't find another one.");
   return 0; // to calm compiler down
 }
+
+
+NAMESPACE_FEM_CLOSE

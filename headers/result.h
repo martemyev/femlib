@@ -1,9 +1,14 @@
 #ifndef RESULT_H
 #define RESULT_H
 
+#include "config.h"
 #include "petscvec.h"
 #include <string>
 #include <vector>
+
+NAMESPACE_FEM_OPEN
+
+
 
 class DoFHandler;
 
@@ -63,5 +68,7 @@ private: //========================= PRIVATE ===================
   Result& operator=(const Result&);
 };
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // RESULT_H

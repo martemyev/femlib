@@ -5,6 +5,10 @@
 #include "fine_mesh.h"
 #include <set>
 
+NAMESPACE_FEM_OPEN
+
+
+
 SymCSRPattern::SymCSRPattern()
 { }
 
@@ -169,3 +173,6 @@ int SymCSRPattern::find(unsigned int num_row, unsigned num_col) const
   // in the rest the function is the same as its parental variant
   return CSRPattern::find(num_row, num_col);
 }
+
+
+NAMESPACE_FEM_CLOSE

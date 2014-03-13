@@ -3,6 +3,9 @@
 #include "fine_mesh.h"
 #include "auxiliary_functions.h"
 
+NAMESPACE_FEM_OPEN
+
+
 
 CSRPattern::CSRPattern()
 { }
@@ -289,3 +292,6 @@ const int* CSRPattern::nnz() const
     nnz[i] = _row[i + 1] - _row[i];
   return nnz;
 }
+
+
+NAMESPACE_FEM_CLOSE

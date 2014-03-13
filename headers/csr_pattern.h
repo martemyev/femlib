@@ -1,11 +1,14 @@
 #ifndef FEM_SPARSE_FORMAT_H
 #define FEM_SPARSE_FORMAT_H
 
-#include <vector>
-#include <set>
+#include "config.h"
 #include "dof_handler.h"
 #include "rectangle.h"
+#include <vector>
+#include <set>
 
+
+NAMESPACE_FEM_OPEN
 
 
 enum CONNECTIVITY
@@ -118,5 +121,8 @@ private: // ============================= PRIVATE ==============================
              */
   CSRPattern& operator=(const CSRPattern&);
 };
+
+
+NAMESPACE_FEM_CLOSE
 
 #endif // FEM_SPARSE_FORMAT_H

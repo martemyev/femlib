@@ -1,9 +1,12 @@
 #ifndef SYM_CSR_PATTERN_H
 #define SYM_CSR_PATTERN_H
 
+#include "config.h"
 #include "csr_pattern.h"
-//#include "dof_handler.h"
-//#include "fine_mesh.h"
+
+NAMESPACE_FEM_OPEN
+
+
 
 class DoFHandler;
 class FineMesh;
@@ -48,5 +51,6 @@ private:
 };
 
 
+NAMESPACE_FEM_CLOSE
 
 #endif // SYM_CSR_PATTERN_H

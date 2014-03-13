@@ -1,7 +1,11 @@
 #ifndef FEM_RECTANGLE_H
 #define FEM_RECTANGLE_H
 
+#include "config.h"
 #include "quadrangle.h"
+
+NAMESPACE_FEM_OPEN
+
 
 
 class Function;
@@ -124,5 +128,7 @@ private: // ========================= PRIVATE ====================
   void check_rectangle() const;
 };
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // FEM_RECTANGLE_H

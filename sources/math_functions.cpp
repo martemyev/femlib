@@ -1,6 +1,9 @@
 #include "math_functions.h"
 #include "auxiliary_functions.h"
 
+NAMESPACE_FEM_OPEN
+
+
 
 double rel_error(const Vec &vec1, const Vec &vec2)
 {
@@ -40,3 +43,6 @@ double norm(const Point &vec)
 {
   return sqrt(dot_product(vec, vec));
 }
+
+
+NAMESPACE_FEM_CLOSE

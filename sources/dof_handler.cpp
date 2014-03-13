@@ -5,6 +5,9 @@
 #include "finite_element.h"
 #include <algorithm>
 
+NAMESPACE_FEM_OPEN
+
+
 
 DoFHandler::DoFHandler(FineMesh *fmesh)
   : _fmesh(fmesh),
@@ -336,3 +339,6 @@ void associated_dg_edges(unsigned int ver_i,
   // the number of found edges has to be 1 (for boundary edges) or 2 (for internal edges)
   expect(n_found_edges == 1 || n_found_edges == 2, "n_found_edges is not right");
 }
+
+
+NAMESPACE_FEM_CLOSE

@@ -1,6 +1,7 @@
 #ifndef FINE_MESH_H
 #define FINE_MESH_H
 
+#include "config.h"
 #include "point.h"
 #include "triangle.h"
 #include "rectangle.h"
@@ -9,6 +10,7 @@
 #include <string>
 #include <set>
 
+NAMESPACE_FEM_OPEN
 
 
 class FineMesh
@@ -199,5 +201,7 @@ private: // ========================== PRIVATE =========================
   void boundary_vertices_initialization(const Point &declared_min_point,
                                         const Point &declared_max_point);
 };
+
+NAMESPACE_FEM_CLOSE
 
 #endif // FINE_MESH_H

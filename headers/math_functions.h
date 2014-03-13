@@ -1,8 +1,13 @@
 #ifndef MATH_FUNCTIONS_H
 #define MATH_FUNCTIONS_H
 
+#include "config.h"
 #include "petscvec.h"
 #include "point.h"
+
+NAMESPACE_FEM_OPEN
+
+
 
 const double FLOAT_NUMBERS_EQUALITY_TOLERANCE = 1e-14;
 const double FLOAT_NUMBERS_EQUALITY_REDUCED_TOLERANCE = 1e-6;
@@ -39,5 +44,7 @@ void normalize(Point &vec);
 double norm(const Point &vec);
 
 
+
+NAMESPACE_FEM_CLOSE
 
 #endif // MATH_FUNCTIONS_H

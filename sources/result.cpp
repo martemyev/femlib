@@ -6,6 +6,8 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 
+NAMESPACE_FEM_OPEN
+
 
 
 Result::Result(const DoFHandler *dof_handler)
@@ -205,3 +207,5 @@ void Result::write_vts(const std::string &filename,
   out.close();
 }
 
+
+NAMESPACE_FEM_CLOSE

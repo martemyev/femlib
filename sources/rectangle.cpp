@@ -3,6 +3,9 @@
 #include "function.h"
 #include "math_functions.h"
 
+NAMESPACE_FEM_OPEN
+
+
 
 Rectangle::Rectangle()
 { }
@@ -191,3 +194,6 @@ unsigned int Rectangle::dof(unsigned int number) const
   expect(number < _dofs.size(), "");
   return _dofs[number];
 }
+
+
+NAMESPACE_FEM_CLOSE

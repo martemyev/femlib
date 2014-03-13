@@ -5,6 +5,9 @@
 #include "math_functions.h"
 #include <algorithm>
 
+NAMESPACE_FEM_OPEN
+
+
 
 Edge::Edge()
   : _triangle(-1)
@@ -124,3 +127,6 @@ const Point Edge::normal(const Triangle &tri, const std::vector<Point> &points) 
 
   return normal;
 }
+
+
+NAMESPACE_FEM_CLOSE

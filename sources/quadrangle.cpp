@@ -1,6 +1,8 @@
 #include "quadrangle.h"
 #include "auxiliary_functions.h"
 
+NAMESPACE_FEM_OPEN
+
 
 
 Quadrangle::Quadrangle()
@@ -113,3 +115,7 @@ Quadrangle& Quadrangle::operator =(const Quadrangle &quad)
 
   return *this;
 }
+
+
+
+NAMESPACE_FEM_CLOSE

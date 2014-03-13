@@ -1,6 +1,11 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include "config.h"
+
+NAMESPACE_FEM_OPEN
+
+
 
 /**
  * Point in 3-dimensional space.
@@ -75,5 +80,6 @@ private:
 };
 
 
+NAMESPACE_FEM_CLOSE
 
 #endif // POINT_H

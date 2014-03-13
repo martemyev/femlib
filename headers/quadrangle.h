@@ -1,8 +1,12 @@
 #ifndef FEM_QUADRANGLE_H
 #define FEM_QUADRANGLE_H
 
+#include "config.h"
 #include "mesh_element.h"
 #include "point.h"
+
+NAMESPACE_FEM_OPEN
+
 
 
 /**
@@ -125,5 +129,6 @@ protected: // ======================= PROTECTED =======================
 };
 
 
+NAMESPACE_FEM_CLOSE
 
 #endif // FEM_QUADRANGLE_H

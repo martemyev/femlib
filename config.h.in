@@ -3,9 +3,17 @@
 
 #include <string>
 
+// options defined in cmake
 #cmakedefine DEBUG
 #cmakedefine HAVE_64BIT_SIZE_T
 
+// the following two definitions are used
+// to wrap the code in namespace 'fem'.
+// thus all classes will be used like 'fem::NameOfClass'
+#define NAMESPACE_FEM_OPEN namespace fem {
+#define NAMESPACE_FEM_CLOSE }
+
+// constants from cmake
 const std::string HOME_DIRECTORY = "$ENV{HOME}";
 
 #endif // FEM_CONFIG_H

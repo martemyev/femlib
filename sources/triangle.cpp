@@ -5,6 +5,9 @@
 #include "math_functions.h"
 #include "function.h"
 
+NAMESPACE_FEM_OPEN
+
+
 
 Triangle::Triangle()
   : MeshElement(n_vertices, n_edges, n_faces, gmsh_el_type),
@@ -446,3 +449,6 @@ bool Triangle::contains_dof(unsigned int num) const
       return true;
   return false;
 }
+
+
+NAMESPACE_FEM_CLOSE
