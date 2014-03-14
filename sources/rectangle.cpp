@@ -2,6 +2,7 @@
 #include "auxiliary_functions.h"
 #include "function.h"
 #include "math_functions.h"
+#include <iostream>
 
 NAMESPACE_FEM_OPEN
 
@@ -144,6 +145,13 @@ void Rectangle::local_rhs_vector(const Function &func,
         for (unsigned int j = 0; j < n_dofs_first; ++j)
           loc_vec[i] += hx * hy * mat[i][j] * func.value(points[_dofs[j]], time) / 36.;
       }
+
+#if defined(DEBUG)
+      for (unsigned int j = 0; j < n_dofs_first; ++j)
+        std::cout << points[_dofs[j]] << ": " << func.value(points[_dofs[j]], time) << "\n";
+      //std::cout << std::endl;
+#endif
+
       return;
     }
   default:
@@ -155,10 +163,10 @@ void Rectangle::local_rhs_vector(const Function &func,
 
 void Rectangle::check_rectangle() const
 {
-  expect(fabs(_X[0] - _X[2]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
-         fabs(_X[1] - _X[3]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
-         fabs(_Y[0] - _Y[1]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
-         fabs(_Y[2] - _Y[3]) < FLOAT_NUMBERS_EQUALITY_TOLERANCE,
+  expect(fabs(_X[0] - _X[2]) < math::FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
+         fabs(_X[1] - _X[3]) < math::FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
+         fabs(_Y[0] - _Y[1]) < math::FLOAT_NUMBERS_EQUALITY_TOLERANCE &&
+         fabs(_Y[2] - _Y[3]) < math::FLOAT_NUMBERS_EQUALITY_TOLERANCE,
          "This is not a rectangle, since the angles are not right, OR the numeration of the vertices is not the one that was expected."
          " The differences are: fabs(_X[0] - _X[2]) = " + d2s(fabs(_X[0] - _X[2])) +
          " fabs(_X[1] - _X[3]) = " + d2s(fabs(_X[1] - _X[3])) +

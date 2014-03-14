@@ -92,4 +92,15 @@ Point operator -(const Point &p1, const Point &p2)
 }
 
 
+
+std::ostream& operator <<(std::ostream &os, const Point &p)
+{
+  os << "(";
+  for (unsigned i = 0; i < Point::n_coord; ++i)
+    os << p._coord[i] << ",";
+  os << ")";
+  return os;
+}
+
+
 NAMESPACE_FEM_CLOSE

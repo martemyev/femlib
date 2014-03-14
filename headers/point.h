@@ -2,6 +2,7 @@
 #define POINT_H
 
 #include "config.h"
+#include <iostream>
 
 NAMESPACE_FEM_OPEN
 
@@ -58,6 +59,13 @@ public:
   Point& operator /=(double d);
 
   friend Point operator -(const Point &p1, const Point &p2);
+
+            /**
+             * Output by <<
+             * @param os - output stream (e.g. std::cout)
+             * @param p - the point itself
+             */
+  friend std::ostream& operator <<(std::ostream &os, const Point &p);
 
             /**
              * Get the coordinate of the point
