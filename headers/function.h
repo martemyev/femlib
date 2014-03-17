@@ -16,6 +16,25 @@ public:
 };
 
 
+
+// =======================================================
+
+class ConstantFunction : public Function
+{
+public:
+  ConstantFunction(double value);
+  ConstantFunction(const ConstantFunction &cf);
+  ConstantFunction& operator =(const ConstantFunction &cf);
+
+  virtual double value(const Point &point,
+                       const double time = 0) const;
+
+private:
+  double _value;
+};
+
+
+
 NAMESPACE_FEM_CLOSE
 
 #endif // FEM_FUNCTION_H

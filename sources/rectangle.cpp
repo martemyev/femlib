@@ -145,13 +145,6 @@ void Rectangle::local_rhs_vector(const Function &func,
         for (unsigned int j = 0; j < n_dofs_first; ++j)
           loc_vec[i] += hx * hy * mat[i][j] * func.value(points[_dofs[j]], time) / 36.;
       }
-
-#if defined(DEBUG)
-      for (unsigned int j = 0; j < n_dofs_first; ++j)
-        std::cout << points[_dofs[j]] << ": " << func.value(points[_dofs[j]], time) << "\n";
-      //std::cout << std::endl;
-#endif
-
       return;
     }
   default:
