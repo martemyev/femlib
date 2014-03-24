@@ -112,6 +112,8 @@ public:
              */
   Quadrangle& operator =(const Quadrangle &quad);
 
+  virtual double mes() const;
+
 
 protected: // ======================= PROTECTED =======================
             /**

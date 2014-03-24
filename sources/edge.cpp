@@ -129,4 +129,10 @@ const Point Edge::normal(const Triangle &tri, const std::vector<Point> &points) 
 }
 
 
+
+double Edge::mes() const
+{
+  require(false, "Not implemented");
+}
+
 NAMESPACE_FEM_CLOSE

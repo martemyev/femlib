@@ -78,6 +78,8 @@ public:
              *                 and we want to find the number of another vertex
              */
   unsigned int another_vertex(const unsigned int vertex) const;
+
+  virtual double mes() const;
 };
 
 

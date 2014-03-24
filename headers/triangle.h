@@ -235,6 +235,8 @@ public:
              */
   bool contains_dof(unsigned int num) const;
 
+  virtual double mes() const;
+
 
 private: //========================== PRIVATE ============================
 

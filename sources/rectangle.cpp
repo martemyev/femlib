@@ -197,4 +197,10 @@ unsigned int Rectangle::dof(unsigned int number) const
 }
 
 
+
+double Rectangle::mes() const
+{
+  return (_X[1] - _X[0]) * (_Y[2] - _Y[0]);
+}
+
 NAMESPACE_FEM_CLOSE

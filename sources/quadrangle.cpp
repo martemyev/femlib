@@ -118,4 +118,9 @@ Quadrangle& Quadrangle::operator =(const Quadrangle &quad)
 
 
 
+double Quadrangle::mes() const
+{
+  require(false, "Not implemented");
+}
+
 NAMESPACE_FEM_CLOSE

@@ -64,4 +64,11 @@ unsigned int Line::another_vertex(const unsigned int vertex) const
 }
 
 
+
+double Line::mes() const
+{
+  require(false, "Not implemented");
+}
+
+
 NAMESPACE_FEM_CLOSE

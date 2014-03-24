@@ -451,4 +451,10 @@ bool Triangle::contains_dof(unsigned int num) const
 }
 
 
+
+double Triangle::mes() const
+{
+  require(false, "Not implemented");
+}
+
 NAMESPACE_FEM_CLOSE

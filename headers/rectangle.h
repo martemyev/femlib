@@ -113,6 +113,7 @@ public:
   unsigned int dof(unsigned int number) const;
   void dof(unsigned int number, unsigned int value);
 
+  virtual double mes() const;
 
 
 private: // ========================= PRIVATE ====================

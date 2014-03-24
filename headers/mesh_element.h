@@ -111,6 +111,11 @@ public:
              */
   bool contains(const unsigned int vertex) const;
 
+            /**
+             * The measure of the element: for 1D elements it's a length, for 2D - an area, for 3D - a volume
+             */
+  virtual double mes() const = 0;
+
 
 protected:
             /**

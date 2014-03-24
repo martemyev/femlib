@@ -65,6 +65,8 @@ public:
              */
   const Point normal(const Triangle &tri, const std::vector<Point> &points) const;
 
+  virtual double mes() const;
+
 
 private:
             /**
