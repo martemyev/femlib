@@ -3,6 +3,7 @@
 
 #include "config.h"
 #include "petscvec.h"
+#include "petscmat.h"
 #include "point.h"
 
 NAMESPACE_FEM_OPEN
@@ -18,9 +19,27 @@ const double PI = 3.141592654;
 
 /**
  * Relative error in 2-norm between two vectors
- * rel_error = norm2(vec1-vec2) / norm2(vec2)
+ * rel_error = norm2(vec1-vec2) / norm2(vec1),
+ * so vec1 is a reference vector
  */
 double rel_error(const Vec &vec1, const Vec &vec2);
+
+
+/**
+ * L2 norm of one vector
+ * @param vec - the vector which L2 norm we want to know
+ * @param mass_matrix - mass matrix
+ */
+double L2_norm(const Vec &vec, const Mat &mass_matrix);
+
+
+/**
+ * L2 norm of the difference between two vectors
+ * @param vec1 - one vector
+ * @param vec2 - another vector
+ * @param mass_matrix - mass matrix
+ */
+double L2_norm(const Vec &vec1, const Vec &vec2, const Mat &mass_matrix);
 
 
 /**
