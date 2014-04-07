@@ -21,7 +21,7 @@ public:
   virtual ~Matrix();
 
             /**
-             * Get the i-th element
+             * Get the element of the matrix
              * @param i - the number of the row of the element we want to return
              * @param j - the number of the column of the element we want to return
              */
